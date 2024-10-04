@@ -1,0 +1,199 @@
+<c-card class="mb-4" >
+    <c-card-header>
+      <div style="width: 50%; float: left;">
+        Factura de Anticipo
+      </div>
+
+      <div style="width: 40%; text-align: right; float: right;">
+        <button cButton class="btn-imagina" color="primary" *ngIf="pedido.docStatus == 'Abierto'" (click)="guardar()" >
+          Guardar
+        </button>
+      </div>
+
+    </c-card-header>
+    
+    <c-card-body>
+      <div class="row">
+        <div class="col-lg-12">
+          <label class="form-control-label" for="input-id-cont">Sucursal:</label>
+          <input type="text" id="txtSucursal" placeholder="Sucursal" class="form-control" [value]="pedido.sucursal" disabled />    
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Serie :</label>
+          <input class="form-control" type="text" id="txtSerie" maxlength="4" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Número:</label>
+          <input class="form-control" type="number" id="txtNumero" maxlength="7" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Fecha Documento:</label>
+          <input class="form-control" type="date" id="txtFechaDoc" [value]="pedido.docDate | date: 'dd/MM/yyyy'" disabled />
+        </div>
+        <!-- <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Fecha Vencimiento:</label>
+          <input class="form-control" type="date" id="txtFechaEnt" [value]="pedido.docDueDate | date: 'dd/MM/yyyy'" />
+        </div> -->
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Nro. Orden de Servicio:</label>
+          <input class="form-control" type="text" id="txtCotizacion" [value]="pedido.docNum" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Condición de Pago:</label>
+          <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.condicionPago" disabled /> 
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Dirección Fiscal :</label>
+          <input class="form-control" type="text" id="txtDirFis" [value]="pedido.direccionFiscal" disabled
+            />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Dirección Despacho:</label>
+          <input class="form-control" type="text" id="txtDirDes" [value]="pedido.direccionDespacho" disabled />
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">%Anticipo:</label>
+          <input class="form-control derecha" type="text" id="txtPorAnticipo" (blur)="calcularImpAnticipo('1')" />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Monto Anticipo</label>
+          <input class="form-control derecha" type="text" id="txtMonAnticipo" (blur)="calcularImpAnticipo('2')" />
+        </div>
+      </div>    
+      <br>
+
+      <c-input-group class="mb-3">
+        <span cInputGroupText>XML</span>
+        <input type="file" id="input-file" class="form-control form-control-alternative" (change)="leerXML($event)" accept="text/xml">            
+      </c-input-group>
+      <c-input-group class="mb-3">
+        <span cInputGroupText>CDR</span>
+        <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '2')" accept="text/xml">            
+      </c-input-group>
+      <c-input-group class="mb-3">
+        <span cInputGroupText>PDF</span>
+        <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '3')" accept="application/pdf">
+      </c-input-group>
+      <c-input-group class="mb-3">
+        <span cInputGroupText>Garantía por cumplimiento</span>
+        <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '4')" accept="application/pdf">
+      </c-input-group>        
+      <c-input-group class="mb-3">
+        <span cInputGroupText>Carta Fianza</span>
+        <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '5')" accept="application/pdf">
+      </c-input-group>
+      
+      <table cTable small="true" responsive="sm" >
+        <thead cTableColor="dark">
+            <tr>
+                <th scope="col" *ngFor="let item of listaHeader">{{ item.label }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of listaPedidos"> <!-- | paginacion:pagina -->
+                <td [class]="item.customClass" *ngFor="let item of listaHeader">
+                    <ng-container *ngIf="row[item.key]">                                        
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                            {{ row[item.key] }}
+                        </ng-container>
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                            {{ row[item.key] | number: '1.2-2' }}
+                        </ng-container>
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                            {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                        </ng-container> 
+                    </ng-container>                    
+                    <ng-container *ngIf="item.type=='buttonSearch'">
+                        <input type="text" [value]="item.cantidad">
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+      </table>
+
+      <c-input-group class="mb-3">
+        <span cInputGroupText >Moneda: </span>
+        <input cFormControl type="text" id="txtMoneda" [value]="pedido.docCur" disabled />
+
+        <span cInputGroupText >Sub Total: </span>
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'" disabled />
+      
+        <span cInputGroupText> Impuesto: </span>
+        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.vatSum | number: '1.2-2'" disabled />
+
+        <span cInputGroupText >Total: </span>
+        <input cFormControl type="text" id="txtTotal" class="derecha" [value]="pedido.docTotal | number: '1.2-2'" disabled />
+    </c-input-group>
+
+      <br/>
+    <c-row *ngIf="errorValidacion">
+        <c-col xs="12">
+        <c-alert color="danger"> {{ msgError }}</c-alert>
+        </c-col>
+    </c-row>
+    
+    </c-card-body>
+  </c-card>
+  
+  <div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagError) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5>Mensaje Sistema</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                  <span>
+                    <p [innerHTML]="msgError"></p>
+                  </span>
+                </div>                              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secundary" (click)="flagError=false">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagExito) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5>Mensaje Sistema</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                  <p>{{ msgError }}</p>
+                </div>                              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secundary" (click)="btnOk()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cargando ... -->
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagLoad) ? 'modal modalApp' : 'modal fade modal-md'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">                  
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12" style="text-align: center !important;">
+                <img src="../../../../assets/images/loading-9414_256.gif" alt="Espera " style="max-width: 833px; vertical-align: middle !important;">
+              </div>                              
+          </div>
+      </div>                  
+    </div>
+  </div>
+</div>

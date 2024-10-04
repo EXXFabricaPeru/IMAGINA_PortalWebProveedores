@@ -1,0 +1,170 @@
+<c-card class="mb-4" >
+    <c-card-header>
+      <div style="width: 50%; float: left;">
+        Conformidad de Servicio N°{{ pedido.docNum }}
+      </div>
+
+      <div style="width: 40%; text-align: right; float: right;">
+        <button cButton class="btn-imagina" *ngIf="pedido.docStatus == 'Abierto'" (click)="crearConformidadServicio()" >
+          Crear Factura
+        </button>
+      </div>
+
+    </c-card-header>
+    <c-card-body>
+      <div class="row">
+        <div class="col-lg-12">
+          <label class="form-control-label" for="input-id-cont">Sucursal:</label>
+          <input type="text" id="txtSucursal" placeholder="Sucursal" class="form-control" [value]="pedido.sucursal" disabled />    
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <label class="form-control-label" >Proveedor : </label>
+          <input class="form-control" type="text" id="txtRazonSocial" [value]="pedido.cardName" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Fecha Contabilizacion:</label>
+          <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.taxDate | date: 'dd/MM/yyyy'" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Fecha Documento:</label>
+          <input class="form-control" type="text" id="txtFechaDoc" [value]="pedido.docDate | date: 'dd/MM/yyyy'" disabled />
+        </div>        
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" >Estado: </label>
+          <input class="form-control" type="text" id="txtEstado" [value]="pedido.docStatus" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Nro. Orden Compra : </label>
+          <input class="form-control" type="text" id="txtCotizacion" [value]="pedido.numeroCotizacion" disabled />          
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Condición de Pago:</label>
+          <input class="form-control" type="text" id="txtConPago" [value]="pedido.condicionPago" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Importe Anticipo</label>
+          <input class="form-control derecha" type="text" id="txtConPago" [value]="pedido.impAnticio | number: '1.2-2'" disabled />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <label class="form-control-label" >Dirección Fiscal : </label>
+          <input class="form-control" type="text" id="txtDirFis" [value]="pedido.direccionFiscal" disabled />
+        </div>
+        <div class="col-lg-6">
+          <label class="form-control-label" >Dirección Despacho:</label>
+          <input class="form-control" type="text" id="txtDirDes" [value]="pedido.direccionDespacho" disabled />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <label class="form-control-label" >Contacto : </label>
+          <input class="form-control" type="text" id="txtContacto" [value]="pedido.contacto" disabled />
+        </div>
+        <div class="col-lg-6">
+          <label class="form-control-label" >Titular Compras : </label>
+          <input class="form-control" type="text" id="TxtComprador" [value]="pedido.comprador" disabled />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-4">
+          <label class="form-control-label" >Fecha Inicio Contrato : </label>
+          <input class="form-control" type="text" id="txtIniCon" [value]="pedido.u_EXC_INICON | date: 'dd/MM/yyyy'" disabled />
+        </div>
+        <div class="col-lg-4">
+          <label class="form-control-label" >Fecha Fin Contrato : </label>
+          <input class="form-control" type="text" id="TxtFinCon" [value]="pedido.u_EXC_FINCON | date: 'dd/MM/yyyy'" disabled />
+        </div>
+        <div class="col-lg-4">
+          <label class="form-control-label" >Fecha Venc. Carta Fianza : </label>
+          <input class="form-control" type="text" id="TxtFvcafi" [value]="pedido.u_EXC_FVCAFI | date: 'dd/MM/yyyy'" disabled />
+        </div>
+      </div>
+      <!-- <br> -->
+      <div class="row">
+        <div class="col-lg-10">
+          <label class="form-control-label" for="input-id-cont">Sustento de Conformidad</label>
+        </div>
+        <div class="col-lg-2">
+          <button (click)="downloadFile('1')" cButton class="btn-sm">Descargar</button>
+        </div>
+      </div>
+      <!-- <br> -->
+      <div *ngIf="pedido.nomArchivo2!=null" class="row">
+        <div class="col-lg-10">
+          <label class="form-control-label" for="input-id-cont">Anexo 1</label>
+        </div>
+        <div class="col-lg-2">
+          <button (click)="downloadFile('2')" cButton class="btn-sm">Descargar</button>
+        </div>
+      </div>
+      <!-- <br> -->
+      <div *ngIf="pedido.nomArchivo3!=null" class="row">
+        <div class="col-lg-10">
+          <label class="form-control-label" for="input-id-cont">Anexo 2</label>
+        </div>
+        <div class="col-lg-2">
+          <button (click)="downloadFile('3')" cButton class="btn-sm">Descargar</button>
+        </div>
+      </div>
+
+      <table cTable>
+        <thead cTableColor="dark">
+          <tr>
+              <th [class]="item.customClass" scope="col" *ngFor="let item of listaHeader">{{ item.label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of listaPedidos"> <!-- | paginacion:pagina -->
+              <td [class]="item.customClass" *ngFor="let item of listaHeader">
+                  <ng-container *ngIf="row[item.key]">                                        
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                          {{ row[item.key] }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                          {{ row[item.key] | number: '1.2-2' }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                          {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                      </ng-container> 
+                  </ng-container>
+                  <ng-container *ngIf="item.type=='buttonSearch'">
+                      <input type="text" [value]="item.cantidad">
+                  </ng-container>
+              </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <c-input-group class="mb-3">
+        <span cInputGroupText >Moneda: </span>
+        <input cFormControl type="text" id="txtMoneda" [value]="pedido.docCur" disabled />
+
+        <span cInputGroupText >Sub Total: </span>
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'" disabled />
+      
+        <span cInputGroupText> Impuesto: </span>
+        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.vatSum | number: '1.2-2'" disabled />
+
+        <span cInputGroupText >Total: </span>
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal | number: '1.2-2'" disabled/>
+    </c-input-group>
+
+    <br/>
+    <c-row *ngIf="errorValidacion">
+        <c-col xs="12">
+        <c-alert color="danger"> {{ msgError }}</c-alert>
+        </c-col>
+    </c-row>
+    <c-row *ngIf="flagExito">
+        <c-col xs="12">
+        <c-alert color="success"> {{ msgError }}</c-alert>
+        </c-col>
+    </c-row>
+  </c-card-body>
+</c-card>
+  

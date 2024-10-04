@@ -1,0 +1,171 @@
+<c-card class="mb-4" >
+  <c-card-header>
+    <div style="width: 50%; float: left;">
+      Factura N° {{ factura.docNum }}
+    </div>
+    <div style="width: 50%; float: right;">
+      <button cButton class="btn-imagina" *ngIf="validoFactoring">Actualizar</button>
+    </div>
+  </c-card-header>
+  
+  <c-card-body>
+    <div class="row">
+      <div class="col-lg-12">
+        <label class="form-control-label" for="input-id-cont">Sucursal:</label>
+        <input type="text" id="txtSucursal" placeholder="Sucursal" class="form-control" [value]="factura.sucursal" disabled />    
+      </div>
+      
+    </div>
+    <div class="row">
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Serie :</label>
+        <input class="form-control" type="text" id="txtSerie" [value]="factura.folioPref" maxlength="4" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Nunero:</label>
+        <input class="form-control" type="number" id="txtNumero" [value]="factura.folioNum" maxlength="7" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Fecha Documento:</label>
+        <input class="form-control" type="text" id="txtFechaDoc" [value]="factura.docDate | date: 'dd/MM/yyyy'" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Fecha Vencimiento:</label>
+        <input class="form-control" type="text" id="txtFechaEnt" [value]="factura.docDueDate | date: 'dd/MM/yyyy'" disabled />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Estado:</label>
+        <input type="text" id="txtEstado" placeholder="Estado" class="form-control" [value]="factura.docStatus" disabled />    
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Condición de Pago:</label>
+        <input class="form-control" type="text" id="txtFechaEnt" [value]="factura.condicionPago" disabled /> 
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Dirección Fiscal :</label>
+        <input class="form-control" type="text" id="txtDirFis" [value]="factura.direccionFiscal" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="input-id-cont">Dirección Despacho:</label>
+        <input class="form-control" type="text" id="txtDirDes" [value]="factura.direccionDespacho" disabled />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3">
+        <label class="form-control-label" >Fecha Inicio Contrato : </label>
+        <input class="form-control" type="text" id="txtIniCon" [value]="factura.u_EXC_INICON | date: 'dd/MM/yyyy'" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" >Fecha Fin Contrato : </label>
+        <input class="form-control" type="text" id="TxtFinCon" [value]="factura.u_EXC_FINCON | date: 'dd/MM/yyyy'" disabled />
+      </div>
+      <div class="col-lg-3" *ngIf="validoFactoring" >
+        <label class="form-control-label" for="input-id-cont">Aplica Factoring:</label>
+        <select class="form-control" id="cmbAplFact" (change)="aplicaProvFactoring()">
+          <option value="N" selected>NO</option>
+          <option value="Y">SI</option>
+        </select>
+      </div>
+      <div class="col-lg-3" *ngIf="validoFactoring">
+        <label class="form-control-label" for="input-id-cont">Proveedor Factoring:</label>
+        <select class="form-control" id="cmbProFact" [disabled]="!aplicaFactoring" >
+          <option value="" selected>--SELECCIONE--</option>
+          <option *ngFor="let item of listaProvFact" [value]="item.cardCode">{{ item.cardName }}</option>
+        </select>
+      </div>
+    </div>
+    <!-- <hr> -->
+    <div class="row">
+      <div class="col-lg-9">
+        <label class="form-control-label" for="input-id-cont">XML</label>
+      </div>
+      <div class="col-lg-3">
+        <button type="button" cButton class="btn-imagina" (click)="capturarFile('1')">Descargar</button>
+      </div>
+    </div>
+    <!-- <br> -->
+    <div class="row">
+      <div class="col-lg-9">
+        <label class="form-control-label" for="input-id-cont">CDR</label>
+      </div>
+      <div class="col-lg-3">
+        <button type="button" cButton class="btn-imagina" (click)="capturarFile('2')">Descargar</button>
+      </div>
+    </div>
+    <!-- <br> -->
+    <div class="row">
+      <div class="col-lg-9">
+        <label class="form-control-label" for="input-id-cont">PDF</label>
+      </div>
+      <div class="col-lg-3">
+        <button type="button" cButton class="btn-imagina" (click)="capturarFile('3')">Descargar</button>
+      </div>
+    </div>
+    <!-- <br> -->
+    <div class="row" *ngIf="factura.NomArchivo4 != null">
+      <div class="col-lg-9">
+        <label class="form-control-label" for="input-id-cont">Garantía por cumplimiento</label>
+      </div>
+      <div class="col-lg-3">
+        <button type="button" cButton class="btn-imagina" (click)="capturarFile('4')">Descargar</button>
+      </div>
+    </div>
+    <!-- <br> -->
+    <div class="row" *ngIf="factura.NomArchivo5 != null">
+      <div class="col-lg-6">
+        <label class="form-control-label" for="input-id-cont">Carta Fianza</label>
+      </div>
+      <div class="col-lg-3">
+        <button type="button" cButton class="btn-imagina" (click)="capturarFile('5')">Descargar</button>
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" >Fecha Venc. Carta Fianza : </label>
+        <input class="form-control" type="text" id="TxtFvcafi" [value]="factura.u_EXC_FVCAFI | date: 'dd/MM/yyyy'" disabled />
+      </div>
+    </div>
+
+    <hr>
+    
+    <table cTable small="true" responsive="sm" >
+      <thead cTableColor="dark">
+          <tr>
+              <th scope="col" *ngFor="let item of listaHeader">{{ item.label }}</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let row of listaPedidos"> <!-- | paginacion:pagina -->
+              <td [class]="item.customClass" *ngFor="let item of listaHeader">
+                  <ng-container *ngIf="row[item.key]">                                        
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                          {{ row[item.key] }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                          {{ row[item.key] | number: '1.2-2' }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                          {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                      </ng-container> 
+                  </ng-container>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+    <c-input-group class="mb-3">
+      <span cInputGroupText >Moneda: </span>
+      <input cFormControl type="text" id="txtMoneda" [value]="factura.docCur" disabled />
+
+      <span cInputGroupText >Sub Total: </span>
+      <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="factura.docTotal - factura.vatSum | number: '1.2-2'" disabled />
+    
+      <span cInputGroupText> Impuesto: </span>
+      <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="factura.vatSum | number: '1.2-2'" disabled />
+
+      <span cInputGroupText >Total: </span>
+      <input cFormControl type="text" id="txtTotal" class="derecha" [value]="factura.docTotal | number: '1.2-2'" disabled />
+  </c-input-group>
+  
+  </c-card-body>
+</c-card>

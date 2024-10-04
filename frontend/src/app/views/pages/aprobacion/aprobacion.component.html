@@ -1,0 +1,250 @@
+<c-card class="mb-4" >
+  <c-card-header>
+    <div style="width: 50%; float: left;">
+      Conformidad de Servicio N°{{ pedido.docNum }}
+    </div>
+  </c-card-header>
+
+  <c-card-body>
+    <c-row *ngIf="errorValidacion">
+      <c-col xs="12">
+      <c-alert color="danger"> {{ msgError }}</c-alert>
+      </c-col>
+    </c-row>
+    <c-row *ngIf="flagExito">
+      <c-col xs="12">
+      <c-alert color="success"> {{ msgError }}</c-alert>
+      </c-col>
+    </c-row>
+    <div class="row">
+      <div class="col-lg-3">
+        <label class="form-control-label" for="cmbDecision">Decisión:</label>
+        <select class="form-control" id="cmbDecision">
+          <option value="" selected>--Seleccione--</option>
+          <option value="Y">Aprobado</option>
+          <option value="N">Rechazado</option>
+        </select>
+      </div>
+      <div class="col-lg-7">
+        <label class="form-control-label" for="txtComentario">Comentario:</label>
+        <input class="form-control" type="text" id="txtComentario"
+        />
+      </div>
+      <div class="col-lg-2">
+        <br>
+        <button cButton class="btn-imagina" (click)="flagEnvio=true" id="btnSend" >Enviar</button>
+      </div>
+    </div>
+    <!-- <br> -->
+    <div class="row">
+      <div class="col-lg-6">
+        <label class="form-control-label" for="txtRazonSocial" >Proveedor : </label>
+        <input class="form-control" type="text" id="txtRazonSocial" [value]="pedido.cardName" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="txtFechaDoc">Fecha Documento: </label>
+        <input class="form-control" type="text" id="txtFechaDoc" [value]="pedido.docDate | date: 'dd/MM/yyyy'" disabled />
+      </div>
+      <div class="col-lg-3">
+        <label class="form-control-label" for="txtFechaEnt" >Fecha Entrega:</label>
+        <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.docDueDate | date: 'dd/MM/yyyy'" disabled />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <label class="form-control-label" >Nro. Orden Compra : </label>
+        <input class="form-control" type="text" id="txtCotizacion" [value]="pedido.numAtCard" disabled />
+      </div>
+      <div class="col-lg-4">
+        <label class="form-control-label">Condición de Pago:</label>
+        <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.condicionPago" disabled />
+      </div>
+      <div class="col-lg-4">
+        <label class="form-control-label">Estado:</label>
+        <input class="form-control" type="text" id="txtEstado" [value]="pedido.docStatus" disabled />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-6">
+        <label class="form-control-label" >Dirección Fiscal : </label>
+        <input class="form-control" type="text" id="txtDirFis" [value]="pedido.direccionFiscal" disabled />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-control-label"> Dirección Despacho: </label>
+        <input class="form-control" type="text" id="txtDirDes" [value]="pedido.direccionDespacho" disabled />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <label class="form-control-label" >Comentario : </label>
+        <input class="form-control" type="text" id="txtComentario" [value]="pedido.comments" disabled />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <label class="form-control-label" >Comentario Aprobador 1: </label>
+        <input class="form-control" type="text" id="txtComentario1" [value]="pedido.comentario1" disabled />
+      </div>
+      <div class="col-lg-6">
+        <label class="form-control-label" >Comentario Aprobador 2: </label>
+        <input class="form-control" type="text" id="txtComentario2" [value]="pedido.comentario2" disabled />
+      </div>
+    </div>
+
+    <hr>
+    <div class="row">
+      <div class="col-lg-10">
+        <label class="form-control-label" for="input-id-cont">Sustento de Conformidad / Guía Remision</label>
+      </div>
+      <div class="col-lg-2">
+        <button (click)="downloadFile('1')" cButton class="btn-sm">Descargar</button>
+      </div>
+    </div>
+    <!-- <hr> -->
+    <div class="row" *ngIf="pedido.nomArchivo2!=null">
+      <div class="col-lg-10">
+        <label class="form-control-label" for="input-id-cont">Aux 1</label>
+      </div>
+      <div class="col-lg-2">
+        <button (click)="downloadFile('2')" cButton class="btn-sm">Descargar</button>
+      </div>
+    </div>
+    <!-- <hr> -->
+    <div class="row" *ngIf="pedido.nomArchivo3!=null">
+      <div class="col-lg-10">
+        <label class="form-control-label" for="input-id-cont">Aux 2</label>
+      </div>
+      <div class="col-lg-2">
+        <button (click)="downloadFile('3')" cButton class="btn-sm">Descargar</button>
+      </div>
+    </div>
+    <hr>
+    <table class="table-imagina rtable">
+      <thead>
+          <tr>
+              <th [class]="item.customClass" colspan="3" scope="col" *ngFor="let item of listaHeader1">{{ item.label }}</th>
+          </tr>
+          <tr>
+              <th [class]="item.customClass" scope="col" *ngFor="let item of listaHeader">{{ item.label }}</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let row of listaPedidos"> <!-- | paginacion:pagina -->
+              <td [class]="item.customClass" *ngFor="let item of listaHeader">
+                  <ng-container *ngIf="row[item.key]">                                        
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                          {{ row[item.key] }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                          {{ row[item.key] | number: '1.2-2' }}
+                      </ng-container>
+                      <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                          {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                      </ng-container> 
+                  </ng-container>
+                  <ng-container *ngIf="item.type=='buttonSearch'">
+                      <input type="text" [value]="item.cantidad">
+                  </ng-container>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+
+    <c-input-group class="mb-3">
+      <span cInputGroupText >Moneda: </span>
+      <input
+        cFormControl
+        type="text"
+        id="txtMoneda"
+        [value]="pedido.docCur"
+      />
+
+      <span cInputGroupText >Sub Total: </span>
+      <input
+        cFormControl
+        type="text"
+        id="txtSubTotal"
+        class="derecha"
+        [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'"
+      />
+    
+      <span cInputGroupText> Impuesto: </span>
+      <input
+        cFormControl
+        type="text"
+        id="txtImpuesto"
+        class="derecha"
+        [value]="pedido.vatSum | number: '1.2-2'"
+      />
+
+      <span cInputGroupText >Total: </span>
+      <input
+        cFormControl
+        type="text"
+        id="txtSubTotal"
+        class="derecha"
+        [value]="pedido.docTotal | number: '1.2-2'"
+      />
+    </c-input-group>
+  </c-card-body>
+</c-card>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagExito) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12">
+                <p>{{ msgError }}</p>
+              </div>                              
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-imagina" (click)="btnOk()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagEnvio) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-6">
+                <label class="form-control-label">Coloque su contraseña: </label>              
+                <input class="form-control" type="password" id="txtContrasena" />
+              </div>                       
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-imagina" (click)="crearConformidadServicio()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cargando ... -->
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagLoad) ? 'modal modalApp' : 'modal fade modal-md'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">                  
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12" style="text-align: center !important;">
+                <img src="../../../../assets/images/loading-9414_256.gif" alt="Espera " style="max-width: 833px; vertical-align: middle !important;">
+              </div>                              
+          </div>
+      </div>                  
+    </div>
+  </div>
+</div>

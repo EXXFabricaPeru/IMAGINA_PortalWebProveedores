@@ -1,0 +1,309 @@
+<c-card class="mb-4" >
+    <c-card-header>
+      <div style="width: 50%; float: left;">
+        Factura 
+      </div>
+
+      <div style="width: 40%; text-align: right; float: right;">
+        <button cButton class="btn-imagina" *ngIf="pedido.docStatus == 'Abierto'" (click)="guardar()" >
+          Guardar
+        </button>
+      </div>
+
+    </c-card-header>
+    
+    <c-card-body>
+      <div class="row">
+        <div class="col-lg-12">
+          <label class="form-control-label" for="input-id-cont">Sucursal:</label>
+          <input type="text" id="txtSucursal" placeholder="Sucursal" class="form-control" [value]="pedido.sucursal" disabled />    
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Serie :</label>
+          <input class="form-control" type="text" id="txtSerie" maxlength="4" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Número:</label>
+          <input class="form-control" type="number" id="txtNumero" maxlength="7" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Fecha Documento:</label>
+          <input class="form-control" type="date" id="txtFechaDoc" [value]="pedido.docDate" />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Fecha Vencimiento:</label>
+          <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.docDueDate | date: 'dd/MM/yyyy'" disabled />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Nro. Conformidad Servicio:</label>
+          <input class="form-control" type="text" id="txtCotizacion" [value]="pedido.docNum" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Condición de Pago:</label>
+          <input class="form-control" type="text" id="txtFechaEnt" [value]="pedido.condicionPago" disabled /> 
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Dirección Fiscal :</label>
+          <input class="form-control" type="text" id="txtDirFis" [value]="pedido.direccionFiscal" disabled
+            />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Dirección Despacho:</label>
+          <input class="form-control" type="text" id="txtDirDes" [value]="pedido.direccionDespacho" disabled />
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Aplica Factoring:</label>
+          <select class="form-control" id="cmbAplFact" (change)="aplicaProvFactoring()">
+            <option value="N" selected>NO</option>
+            <option value="Y">SI</option>
+          </select>
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="input-id-cont">Proveedor Factoring:</label>
+          <select class="form-control" id="cmbProFact" [disabled]="!aplicaFactoring" >
+            <option value="" selected>--SELECCIONE--</option>
+            <option *ngFor="let item of listaProvFact" [value]="item.cardCode">{{ item.cardName }}</option>
+          </select>
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="txtFonGar">Fondo Grantia:</label>
+          <input class="form-control" type="text" id="txtFonGar" [value]="pedido.fondoGrantia" disabled />
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" for="txtPorFonGar">% Fondo Garantia:</label>
+          <input class="form-control" type="text" id="txtPorFonGar" [value]="pedido.porFondoGar" disabled />
+        </div>
+      </div>   
+      <div class="row">
+        <div class="col-lg-3">
+          <label class="form-control-label" for="txtPorFonGar">Importe Anticipo:</label>
+          <input class="form-control derecha" type="text" id="txtPorFonGar" [value]="pedido.impAnticio | number: '1.2-2'" disabled />
+        </div>
+        <div class="col-lg-9">
+          <label class="form-control-label" for="txtComentario">Comentario:</label>
+          <input class="form-control" type="text" id="txtComentario" />
+        </div>
+      </div>
+      <hr>
+
+      <div class="row">        
+        <div class="col-lg-12">
+          <label class="form-control-label">XML</label>
+          <input type="file" id="input-file" class="form-control" (change)="leerXML($event)" accept="text/xml">
+        </div>
+      </div>
+      <div class="row">        
+        <div class="col-lg-12">          
+          <label class="form-control-label">CDR</label>
+          <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '2')" accept="text/xml"> 
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <label class="form-control-label">PDF</label>
+          <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '3')" accept="application/pdf">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <label class="form-control-label">Garantía por cumplimiento</label>
+          <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '4')" accept="application/pdf">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-9">
+          <label class="form-control-label">Carta Fianza</label>
+          <input type="file" id="input-file" class="form-control form-control-alternative" (change)="capturarFile($event, '5')" accept="application/pdf">
+        </div>
+        <div class="col-lg-3">
+          <label class="form-control-label" >Fecha Venc. Carta Fianza : </label>
+          <input class="form-control" type="text" id="TxtFvcafi" [value]="pedido.u_EXC_FVCAFI" disabled />
+        </div>
+      </div>
+      
+      <hr>
+      <div class="row">
+        <div class="col-lg-8">
+          &nbsp;
+        </div>
+        <div class="col-lg-4" style="text-align: right;">
+          <button type="button" cButton (click)="openDocuments()" class="btn-imagina">Agregar Guia de Entrega</button>
+        </div>
+      </div>
+
+      <table cTable small="true" responsive="sm" >
+        <thead cTableColor="dark">
+            <tr>
+                <th scope="col" *ngFor="let item of listaHeader">{{ item.label }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of listaPedidos"> <!-- | paginacion:pagina -->
+                <td [class]="item.customClass" *ngFor="let item of listaHeader">
+                    <ng-container *ngIf="row[item.key]">                                        
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                            {{ row[item.key] }}
+                        </ng-container>
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                            {{ row[item.key] | number: '1.2-2' }}
+                        </ng-container>
+                        <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                            {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                        </ng-container> 
+                    </ng-container>                    
+                    <ng-container *ngIf="item.type=='buttonSearch'">
+                        <input type="text" [value]="item.cantidad">
+                    </ng-container>
+                </td>
+            </tr>
+        </tbody>
+      </table>
+
+      <c-input-group class="mb-3">
+        <span cInputGroupText >Moneda: </span>
+        <input cFormControl type="text" id="txtMoneda" [value]="pedido.docCur" disabled   />
+
+        <span cInputGroupText >Sub Total: </span>
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'" disabled />
+      
+        <span cInputGroupText> Impuesto: </span>
+        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.vatSum | number: '1.2-2'" disabled />
+
+        <span cInputGroupText >Total: </span>
+        <input cFormControl type="text" id="txtTotal" class="derecha" [value]="pedido.docTotal | number: '1.2-2'" disabled />
+    </c-input-group>
+
+      <br/>
+    <c-row *ngIf="errorValidacion">
+        <c-col xs="12">
+        <c-alert color="danger"> {{ msgError }}</c-alert>
+        </c-col>
+    </c-row>
+    
+    </c-card-body>
+  </c-card>
+  
+  <div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagError) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5>Mensaje Sistema</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                  <p>{{ msgError }}</p>
+                </div>                              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button cButton class="btn-imagina" (click)="flagError=false">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagExito) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5>Mensaje Sistema</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                  <p>{{ msgError }}</p>
+                </div>                              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button cButton class="btn-imagina" (click)="btnOk()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(modalDialog) ? 'modal modalApp' : 'modal fade modal-dialog modal-xl'">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content" >
+        <div class="modal-header">
+            <h5>Seleccionar Conformidad </h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-3">
+                  <label>Desde:</label>
+                  <input type="date" class="form-control" id="txtDesde" >
+                </div>
+                <div class="col-lg-3">
+                  <label>Hasta:</label>
+                  <input type="date" class="form-control" id="txtHasta">
+                </div> 
+                <div class="col-lg-3">
+                  &nbsp;
+                </div> 
+                <div class="col-lg-3">
+                  <button cButton class="btn-imagina" (click)="buscarConformidad()">Buscar</button>
+                </div>                              
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-lg-12">
+                <table cTable small="true" responsive="sm" id="gridDoc">
+                  <thead cTableColor="dark">
+                      <tr>
+                          <th scope="col" *ngFor="let item of listaHeaderDocs">{{ item.label }}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let row of listaCS"> <!-- | paginacion:pagina -->
+                          <td [class]="item.customClass" *ngFor="let item of listaHeaderDocs">
+                              <ng-container *ngIf="row[item.key]">                                        
+                                  <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
+                                      {{ row[item.key] }}
+                                  </ng-container>
+                                  <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                                      {{ row[item.key] | number: '1.2-2' }}
+                                  </ng-container>
+                                  <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
+                                      {{ row[item.key] | date: 'dd/MM/yyyy' }}
+                                  </ng-container> 
+                              </ng-container>
+                              <ng-container *ngIf="item.type=='check'">
+                                  <input type="checkbox" value="Y" >
+                              </ng-container>
+                          </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button cButton class="btn-imagina" (click)="seleccionarConformidad()">Seleccionar</button>
+            <button cButton class="btn-imagina" (click)="modalDialog=false">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cargando ... -->
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagLoad) ? 'modal modalApp' : 'modal fade modal-md'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">                  
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12" style="text-align: center !important;">
+                <img src="../../../../assets/images/loading-9414_256.gif" alt="Espera " style="max-width: 833px; vertical-align: middle !important;">
+              </div>                              
+          </div>
+      </div>                  
+    </div>
+  </div>
+</div>

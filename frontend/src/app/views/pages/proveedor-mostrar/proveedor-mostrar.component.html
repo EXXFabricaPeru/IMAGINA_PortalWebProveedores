@@ -1,0 +1,575 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+    <c-container>
+      <c-row class="justify-content-center">
+        <c-col lg="12" md="12" xl="12">
+          <c-card class="mx-4">
+            <c-card-body class="p-12" style="height: 870px; width: 100% !important;">
+              <form cForm>
+                <!-- Tabs navs -->
+                <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <a
+                      [ngClass]="(tab1) ? 'nav-link active' : 'nav-link'"
+                      id="ex1-tab-1"
+                      data-mdb-toggle="tab"
+                      (click)="tab1=true;tab2=false;tab3=false;tab4=false;tab5=false"
+                      role="tab"
+                      aria-controls="ex1-tabs-1"
+                      (aria-selected)="tab1"
+                      >General</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      [ngClass]="(tab2) ? 'nav-link active' : 'nav-link'"
+                      id="ex1-tab-2"
+                      data-mdb-toggle="tab"
+                      (click)="tab1=false;tab2=true;tab3=false;tab4=false;tab5=false"
+                      role="tab"
+                      aria-controls="ex1-tabs-2"
+                      (aria-selected)="tab2"
+                    >Contactos</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a
+                      [ngClass]="(tab3) ? 'nav-link active' : 'nav-link'"
+                      id="ex1-tab-3"
+                      data-mdb-toggle="tab"
+                      (click)="tab1=false;tab2=false;tab3=true;tab4=false;tab5=false"
+                      role="tab"
+                      aria-controls="ex1-tabs-3"
+                      (aria-selected)="tab3"
+                    >Direcciones</a>
+                  </li>
+                  <li class="nav-item" role="presentation" >
+                    <a
+                      [ngClass]="(tab4) ? 'nav-link active' : 'nav-link'"
+                      id="ex1-tab-4"
+                      data-mdb-toggle="tab"
+                      (click)="tab1=false;tab2=false;tab3=false;tab4=true;tab5=false"
+                      role="tab"
+                      aria-controls="ex1-tabs-4"
+                      (aria-selected)="tab4"
+                    >Cuentas Bancarias</a>
+                  </li>
+                  <li *ngIf="proveedor.estado != 'Y'" class="nav-item" role="presentation" >
+                    <a
+                      [ngClass]="(tab5) ? 'nav-link active' : 'nav-link'"
+                      id="ex1-tab-5"
+                      data-mdb-toggle="tab"
+                      (click)="tab1=false;tab2=false;tab3=false;tab4=false;tab5=true"
+                      role="tab"
+                      aria-controls="ex1-tabs-5"
+                      (aria-selected)="tab5"
+                    >Aprobar</a>
+                  </li>
+                </ul>
+                <!-- Tabs navs -->
+  
+                <!-- Tabs content -->
+                <div class="tab-content" id="ex1-content">
+                  <div [ngClass]="(tab1) ? 'tab-pane fade show active' : 'tab-pane fade' " id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-id-cont">Código:</label>
+                            <input type="text" id="txtcodigo" cFormControl disabled="">
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-id-cont">Razón Social:</label>
+                            <input type="text" id="txtrazonsocial" cFormControl disabled="" />
+                          </div> 
+                        </div>
+                        <div class="col-lg-3">
+                          <label class="form-control-label" for="input-id-cont">Condición Pago:</label>
+                          <select id="cmbCondPago" class="form-control" disabled="" >
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let condPag of listaCondicionPago" [value]="condPag.codigo" > {{ condPag.descripcion }} </option>  
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <label class="form-control-label" for="input-id-cont">Tipo Documento:</label>
+                          <select id="cmbtipodoc" class="form-control" disabled="" >
+                            <option value="">--Seleccione--</option>        
+                            <option value="0">OTROS TIPOS DE DOCUMENTOS</option>
+                            <option value="1">DOCUMENTO NACIONAL DE IDENTIDAD (DNI)</option>        
+                            <option value="4">CARNET DE EXTRAMJERIA</option>
+                            <option value="6">REGISTRO UNICO DE CONTRIBUYENTE</option>        
+                            <option value="7">PASAPORTE</option>
+                            <option value="A">CEDULA DIPLOMATICA DE IDENTIDAD</option>
+                          </select>
+                        </div>
+                        <div class="col-lg-3">
+                          <label class="form-control-label" for="input-id-cont">Número Documento:</label>
+                          <input type="text" id="txtnrodoc" cFormControl disabled="" /> <!--  -->
+                        </div>
+                        <div class="col-lg-3">
+                          <label class="form-control-label" for="input-id-cont">Correo:</label>
+                          <input type="email" id="txtcorreo" cFormControl disabled="" />                        
+                        </div>
+                        <div class="col-lg-3">
+                          <label class="form-control-label" for="input-id-cont">Teléfono:</label>
+                          <input type="text" id="txttelfcli" cFormControl disabled="" />                        
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <!-- <label class="form-control-label" for="input-id-cont">Descargar todo</label> -->
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('0')" cButton class="btn-imagina">Descargar Todo</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Declaración Jurada Anticorrupción</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('1')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Código Ética y Conducta</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('2')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Declaración Jurada de Confidencialidad</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('3')" cButton class="btn-imagina">Descargar</button>
+                      </div>                    
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Declaración Jurada de Conocimiento</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('4')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Ficha RUC</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('5')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Reporte Tributario SUNAT</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('6')" cButton class="btn-imagina">Descargar</button>
+                      </div>                    
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Reporte Plataforma AL/FT</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('7')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Reporte Central Riesgo</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('8')" cButton class="btn-imagina">Descargar</button>
+                      </div>
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">Reporte R03: Trabajadores</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('9')" cButton class="btn-imagina">Descargar</button>
+                      </div>                    
+                    </div>
+                    <!-- <br> -->
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">DNI Representante Legal</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('10')" cButton class="btn-imagina">Descargar</button>
+                      </div>                    
+                    </div> 
+                    <!-- <br> -->
+                    <div class="row" *ngIf="flagArchivoaux1">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">{{ nomArchivoaux1 }}</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('11')" cButton class="btn-imagina">Descargar</button>
+                      </div>                   
+                    </div>
+                    <!-- <br> -->
+                    <div class="row" *ngIf="flagArchivoaux2">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">{{ nomArchivoaux2 }}</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('12')" cButton class="btn-imagina">Descargar</button>
+                      </div>                   
+                    </div>
+                    <div class="row" *ngIf="flagArchivoaux3">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">{{ nomArchivoaux3 }}</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('13')" cButton class="btn-imagina">Descargar</button>
+                      </div>                   
+                    </div>
+                    <div class="row" *ngIf="flagArchivoaux4">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">{{ nomArchivoaux4 }}</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('14')" cButton class="btn-imagina">Descargar</button>
+                      </div>                   
+                    </div>
+                    <div class="row" *ngIf="flagArchivoaux5">
+                      <div class="col-lg-10">
+                        <label class="form-control-label" for="input-id-cont">{{ nomArchivoaux5 }}</label>
+                      </div>
+                      <div class="col-lg-2">
+                        <button (click)="downloadFile('15')" cButton class="btn-imagina">Descargar</button>
+                      </div>                   
+                    </div>  
+                  </div>
+                  <div [ngClass]="(tab2) ? 'tab-pane fade show active' : 'tab-pane fade' " id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                    <div class="pl-lg-4">
+                        <div class="row">
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-id-cont">ID Contacto</label>
+                              <input type="text" id="txtCodContacto" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-pnom-cont">Primer Nombre</label>
+                              <input type="text" id="txtPrimerNombre" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-snom-cont">Segundo Nombre</label>
+                              <input type="text" id="txtSegundoNombre" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-ape-cont">Apellidos</label>
+                              <input type="text" id="txtApellidoCont" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-tel-cont">Teléfono</label>
+                              <input type="text" id="txtTelfContacto" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-cel-cont">Celular</label>
+                              <input type="text" id="txtCelContacto" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-car-cont">Cargo</label>
+                              <input type="text" id="txtCargoContac" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-email-cont">Correo</label>
+                              <input type="text" id="txtEmailContacto" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="form-group">
+                                <ul>
+                                  <li *ngFor="let contacto of listaContacto" >
+                                    <ng-container *ngIf="contacto.flagEliminar == false">
+                                      <label style="width: 600px;" >{{ contacto.nombre }}</label>
+                                      <button type="button" class="btn-imagina btn-sm" (click)="editarContacto(contacto)">Ver</button>
+                                    </ng-container>
+                                  </li>
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div [ngClass]="(tab3) ? 'tab-pane fade show active' : 'tab-pane fade' " id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                    <div class="pl-lg-4">
+                        <div class="row">
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-pais">País</label>
+                              <select name="" id="cmbpais" class="form-control" disabled >
+                                <option value="PE">Perú</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-departamento">Departamento</label>
+                              <select name="" id="cmbdepartamento" class="form-control" disabled >
+                                <option value="">--Seleccione--</option>
+                                <option *ngFor="let depa of listaDepartamento" [value]="depa.codigo" > {{ depa.descripcion }} </option>            
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-provincia">Provincia</label>
+                              <select name="" id="cmbprovincia" class="form-control" disabled >
+                                <option value="">--Seleccione--</option>
+                                <option *ngFor="let prov of listaProvincia" [value]="prov.codigo" [selected]="provinciaSel==prov.codigo" > {{ prov.descripcion }} </option>            
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="input-distrito">Distrito</label>
+                              <select name="" id="cmbdistrito" class="form-control" disabled >
+                                <option value="">--Seleccione--</option>
+                                <option *ngFor="let dist of listaDistrito" [value]="dist.codigo" [selected]="distritoSel==dist.codigo" > {{ dist.descripcion }} </option>            
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">                      
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-tipo-dir">Tipo Dirección</label>
+                              <select name="" id="cmbtipodir" class="form-control" disabled="" >
+                                <option value="">--Seleccione--</option>            
+                                <option value="B">FISCAL</option>            
+                                <option value="S">ALMACEN</option>            
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-id-dir">ID Dirección</label>
+                              <input type="text" id="input-id-dir" class="form-control form-control-alternative" disabled="" />
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="form-control-label" for="input-direccion">Dirección</label>
+                              <input type="text" id="txtdireccion" class="form-control form-control-alternative" disabled />
+                            </div>
+                          </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <div class="form-group">
+                              <ul>
+                                <li *ngFor="let dir of listaDireccion" >
+                                  <label style="width: 600px;" >{{ dir.address }} - {{ dir.direccionDesc }}</label>
+                                  <button type="button" class="btn-imagina btn-sm" (click)="editarDireccion(dir)">Ver</button> 
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div [ngClass]="(tab4) ? 'tab-pane fade show active' : 'tab-pane fade' " id="ex1-tabs-4" role="tabpanel" aria-labelledby="ex1-tab-4">
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-id-cont">Nombre Cuenta</label>
+                            <input type="text" id="txtnomcuenta" class="form-control form-control-alternative" disabled />
+                          </div>
+                        </div>
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-id-cont">Banco</label>
+                            <select name="" id="cmbbanco" class="form-control" disabled >
+                              <option value="">--Seleccione--</option>
+                              <option *ngFor="let depa of listaBanco" [value]="depa.codigo" > {{ depa.descripcion }} </option>            
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-pnom-cont">Tipo Cuenta</label>
+                            <select id="cmbtipocuenta" class="form-control" disabled >
+                              <option value="">--Seleccione--</option>
+                              <option *ngFor="let tipo of listaTipoCuenta" [value]="tipo.codigo" > {{ tipo.descripcion }} </option>  
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-snom-cont">Moneda</label>
+                            <select id="cmbmoneda" class="form-control" disabled >
+                              <option value="">--Seleccione--</option>
+                              <option *ngFor="let moneda of listaMoneda" [value]="moneda.codigo" > {{ moneda.descripcion }} </option>  
+                            </select>
+                          </div>
+                        </div>                    
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-ape-cont">Nro Cuenta</label>
+                            <input type="text" id="txtnrocuenta" class="form-control form-control-alternative" disabled />
+                          </div>
+                        </div>
+                        <div class="col-lg-3">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-ape-cont">Nro Cuenta Interbancaria</label>
+                            <input type="text" id="txtinterbancaria" class="form-control form-control-alternative" disabled />
+                          </div>
+                        </div>
+                        <div class="col-lg-3">
+                          <br>
+                          <c-form-check>
+                            <input cFormCheckInput formControlName="isDetraccion" id="cbIsDetraccion" type="checkbox" disabled />
+                            <label cFormCheckLabel for="cbIsDetraccion"> &nbsp;&nbsp;&nbsp; Es de tipo detracción</label>
+                          </c-form-check>
+                        </div>
+                        
+                      </div>
+                      <hr>
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div class="form-group">
+                              <ul>
+                                <li *ngFor="let cuenta of listaCuenta" >
+                                  <label style="width: 600px;" >{{ cuenta.acctName }}</label>
+                                  <button type="button" class="btn-imagina btn-sm" (click)="editarCuenta(cuenta)">Ver</button>
+                                  <hr>
+                                </li>
+                              </ul>
+                          </div>
+                        </div>
+                      </div>                  
+                    </div>
+                  </div>
+                  <div *ngIf="proveedor.estado != 'Y'" [ngClass]="(tab5) ? 'tab-pane fade show active' : 'tab-pane fade' " id="ex1-tabs-5" role="tabpanel" aria-labelledby="ex1-tab-5">
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-id-cont">Decisión:</label>
+                            <select name="" id="cmbdecision" class="form-control" >
+                              <option value="">--Seleccione--</option>       
+                              <option value="Y">Aprobado</option>       
+                              <option value="N">Rechazado</option>       
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="txtComentario">Comentario:</label>
+                            <input class="form-control" id="txtComentario" >
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <button cButton class="btn-imagina" (click)="aprobar()">Enviar</button>
+                          </div>
+                        </div>                   
+                      </div>            
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </c-card-body>
+          </c-card>
+        </c-col>
+      </c-row>      
+    </c-container>
+  </div>
+  
+<!-- Modal Cargando ... -->
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagLoad) ? 'modal modalApp' : 'modal fade modal-md'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">                  
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12" style="text-align: center !important;">
+                <img src="../../../../assets/images/loading-9414_256.gif" alt="Espera " style="max-width: 833px; vertical-align: middle !important;">
+              </div>                              
+          </div>
+      </div>                  
+    </div>
+  </div>
+</div>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(confirmDialog) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <p>{{ msgError }}</p>                    
+            </div>                              
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button cButton class="btn-imagina" (click)="confirmDialog=false">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(exitoDialog) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <p>{{ msgError }}</p>                    
+            </div>                              
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button cButton class="btn-imagina" (click)="btnOk()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,71 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+    <c-container>
+      <c-row class="justify-content-center">
+        <c-col lg="7" md="9" xl="6">
+          <c-card class="mx-4">
+            <c-card-header>
+              <div style="width: 50%; float: left;">
+                  Registro Proveedor 
+              </div>
+            
+              <div style="width: 40%; text-align: right; float: right;">
+                  <button cButton class="px-4" color="primary" *ngIf="pedido.docStatus == 'Abierto'" > <!-- (click)="guardar()" -->
+                   Guardar
+                  </button>
+              </div>
+            </c-card-header>
+            <c-card-body class="p-4">
+              <form cForm>
+                <c-input-group class="mb-3">          
+                    <span cInputGroupText >Código : </span>
+                    <input type="text" id="txtcodigo" placeholder="P00000000000" cFormControl disabled="" >
+                    
+                    <span cInputGroupText>Razon Social: </span>
+                    <input type="text" id="txtrazonsocial" placeholder="Razon Social" cFormControl />                    
+                </c-input-group>
+                <c-input-group class="mb-3">
+                    <span cInputGroupText >Tipo Documento </span>
+                    <select id="cmbtipodoc" cFormControl >
+                        <option value="">--Seleccione--</option>        
+                        <option value="0">OTROS TIPOS DE DOCUMENTOS</option>
+                        <option value="1">DOCUMENTO NACIONAL DE IDENTIDAD (DNI)</option>        
+                        <option value="4">CARNET DE EXTRAMJERIA</option>
+                        <option value="6">REGISTRO UNICO DE CONTRIBUYENTE</option>        
+                        <option value="7">PASAPORTE</option>
+                        <option value="A">CEDULA DIPLOMATICA DE IDENTIDAD</option>
+                    </select>
+                
+                    <span cInputGroupText>
+                        Numero Documento:
+                    </span>
+                    <input type="text" id="txtnrodoc" placeholder="Numero Documento" cFormControl /> <!-- (blur)="onBlurDocumento()" -->
+                </c-input-group>          
+                <c-input-group class="mb-3">
+                    <span cInputGroupText >Correo: </span>
+                    <input type="email" id="txtcorreo" placeholder="E-mail" cFormControl />
+                
+                    <span cInputGroupText> Teléfono: </span>
+                    <input type="text" id="txttelfcli" placeholder="Telefono Cliente" cFormControl />
+                    
+                    <span cInputGroupText> Condición de pago: </span>
+                    <input type="text" id="cmbCondPago" cFormControl />
+                </c-input-group>
+
+                <!-- Mensajes de validació  n -->
+                <c-row *ngIf="errorValidacion">
+                    <c-col xs="12">
+                    <c-alert color="danger"> {{ msgError }}</c-alert>
+                    </c-col>
+                </c-row>
+                <c-row *ngIf="flagExito">
+                    <c-col xs="12">
+                    <c-alert color="success"> {{ msgError }}</c-alert>
+                    </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+        </c-col>
+      </c-row>
+    </c-container>
+  </div>

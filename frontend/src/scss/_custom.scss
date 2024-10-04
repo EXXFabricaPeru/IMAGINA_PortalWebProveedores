@@ -1,0 +1,193 @@
+// Here you can add other styles
+
+// custom .chartjs-tooltip-body-item padding
+@import "charts";
+
+// custom tweaks for scrollbar styling (wip)
+@import "scrollbar";
+
+ // custom calendar today cell color
+.calendar-cell.today {
+  --cui-calendar-cell-today-color: var(--cui-info) !important;
+}
+
+// custom select week cursor pointer
+.select-week .calendar-row.current {
+  cursor: pointer;
+}
+
+/**************************************************************************************************************************************/
+/*************************************************************** Nuevos ***************************************************************/
+/**************************************************************************************************************************************/
+//Baground
+.bg-imagina {
+  background-color: #000000;
+}
+
+.row {
+  margin-top: 5px;
+}
+
+//btn
+.btn-imagina {
+  background-color: #97945c;
+  color: white;
+  border-color: #97945c;
+}
+
+.btn-imagina:hover{
+  background-color: #67a09f;
+  border-color: #67a09f;
+}
+
+/*******************************************************************/
+/****************************** table ******************************/
+/*******************************************************************/
+.tbl-imagina {
+  overflow-x:auto;
+  // margin-bottom: 30px;
+}
+
+table {
+  background: #f5f5f5;
+  border-collapse: separate;
+  box-shadow: inset 0 1px 0 #fff;
+  font-size: 12px;
+  line-height: 12px;
+  margin: 30px auto;
+  text-align: left;
+  width: 100% !important;
+} 
+
+th {
+  background: url(https://jackrugile.com/images/misc/noise-diagonal.png), linear-gradient(#777, #444);
+  border-left: 1px solid #555;
+  border-right: 1px solid #777;
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #333;
+  box-shadow: inset 0 1px 0 #999;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 15px;
+  position: relative;
+  text-shadow: 0 1px 0 #000;  
+}
+
+th:after {
+  background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
+  content: '';
+  display: block;
+  height: 25%;
+  left: 0;
+  margin: 1px 0 0 0;
+  position: absolute;
+  top: 25%;
+  width: 100%;
+}
+
+th:first-child {
+  border-left: 1px solid #777;  
+  box-shadow: inset 1px 1px 0 #999;
+}
+
+th:last-child {
+  box-shadow: inset -1px 1px 0 #999;
+}
+
+td {
+  border-right: 1px solid #fff;
+  border-left: 1px solid #e8e8e8;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 10px 15px;
+  position: relative;
+  transition: all 300ms;
+}
+
+td:first-child {
+  box-shadow: inset 1px 0 0 #fff;
+} 
+
+td:last-child {
+  border-right: 1px solid #e8e8e8;
+  box-shadow: inset -1px 0 0 #fff;
+} 
+
+tr {
+  background: url(https://jackrugile.com/images/misc/noise-diagonal.png); 
+}
+
+tr:nth-child(odd) td {
+  background: #f1f1f1 url(https://jackrugile.com/images/misc/noise-diagonal.png); 
+}
+
+// tr:last-of-type td {
+//   box-shadow: inset 0 -1px 0 #fff; 
+// }
+
+// tr:last-of-type td:first-child {
+//   box-shadow: inset 1px -1px 0 #fff;
+// } 
+
+// tr:last-of-type td:last-child {
+//   box-shadow: inset -1px -1px 0 #fff;
+// } 
+
+// tbody:hover td {
+//   color: transparent;
+//   text-shadow: 0 0 3px #aaa;
+// }
+
+// tbody:hover tr:hover td {
+//   color: #444;
+//   text-shadow: 0 1px 0 #fff;
+// }
+
+/****************************************************************************************************************/
+/**************************************************** Modals ****************************************************/
+/****************************************************************************************************************/
+.dark-modal .modal-content {
+  background-color: #292b2c;
+  color: white;
+}
+.dark-modal .close {
+  color: white;
+}
+.light-blue-backdrop {
+  background-color: #5cb3fd;
+}
+
+.modalApp {
+  background: #0000008a;
+  z-index: 9999;
+  display: block;
+}
+
+.modalApp .modal-footer {
+  justify-content: space-around !important;
+}
+
+//otros
+.visible {
+  display: block;
+}
+
+.oculto {
+  display: none;
+}
+
+.right {
+  text-align: right;
+}
+
+.derecha {
+  text-align: right;
+}
+
+.centrar {
+  text-align: center;
+}
+
+.entero {
+  text-align: right;
+}

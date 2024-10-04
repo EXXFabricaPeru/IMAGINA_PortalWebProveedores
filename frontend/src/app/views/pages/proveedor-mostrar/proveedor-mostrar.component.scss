@@ -1,0 +1,36 @@
+.visible {
+    display: block;
+}
+
+.oculto {
+    display: none;
+}
+
+.right {
+    text-align: right;
+}
+
+.entero {
+    text-align: right;
+}
+
+.dark-modal .modal-content {
+    background-color: #292b2c;
+    color: white;
+}
+.dark-modal .close {
+    color: white;
+}
+.light-blue-backdrop {
+    background-color: #5cb3fd;
+}
+
+.modalApp {
+    background: #0000008a;
+    z-index: 9999;
+    display: block;
+}
+
+.modalApp .modal-footer {
+    justify-content: space-around !important;
+}

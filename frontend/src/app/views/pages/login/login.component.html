@@ -1,0 +1,144 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container breakpoint="md">
+    <c-row class="justify-content-center">
+      <c-col lg="10" xl="8">
+        <c-card-group>
+          <c-card class="p-4">
+            <c-card-body>
+              <form cForm>
+                <h1>Inicio de Sesión</h1>
+                <br>
+                <!-- <p class="text-body-secondary">Inicio de Sesión</p> -->
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input 
+                    autoComplete="username" 
+                    cFormControl placeholder="Usuario" 
+                    id="user" 
+                    (keypress)="keyPress($event)" />
+                </c-input-group>
+                <c-input-group class="mb-4">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input
+                    autoComplete="current-password"
+                    cFormControl
+                    placeholder="Password"
+                    type="password"
+                    id="pass"
+                    (keypress)="keyPress($event)"
+                  />
+                </c-input-group>
+                <c-row>
+                  <c-col xs="6">
+                    <button cButton class="btn btn-imagina" (click)="validar()">
+                      Login
+                    </button>
+                  </c-col>
+                  <!-- <c-col class="text-right" xs="6">
+                    <button cButton class="px-0" color="link">
+                      Forgot password?
+                    </button>
+                  </c-col> -->
+                </c-row>
+                <br>
+                <c-row>
+                  <c-col xs="12">
+                    <a href="#" (click)="confirmDialog=true">
+                      Olvide mi contraseña
+                    </a>
+                  </c-col>
+                </c-row>
+                <br>
+                <c-row *ngIf="errorValidacion">
+                  <c-col xs="12">
+                    <c-alert color="danger"> {{ msgError }}</c-alert>
+                  </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-imagina py-5">
+            <c-card-body class="text-center">
+              <div>
+                <p>
+                  <img src="../../../../assets/images/imagina2.jpg">
+                </p>
+                <h2 style="top:170px !important; right: 26% !important; position:absolute !important;">Registrarse</h2>
+                <button class="btn btn-imagina mt-3" (click)="registrarse()" style="top:222px !important; right: 28% !important; position:absolute !important;">
+                  ¡Registrate Ahora!
+                </button>
+              </div>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(confirmDialog) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12">
+            <label class="form-control-label">Ingrese su R.U.C:</label>
+            <input type="text" id="txtCorreo" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-lg-6">
+            <button cButton class="btn-imagina" (click)="enviarOlvido()" style="width: 70px;">OK</button>
+          </div>
+          <div class="col-lg-6">
+            <button cButton class="btn-imagina" (click)="confirmDialog=false" style="width: 70px;">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagExito) ? 'modal modalApp' : 'modal fade bd-example-modal-lg'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5>Mensaje Sistema</h5>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12">
+                <p>{{ msgError }}</p>
+              </div>                              
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-secundary" (click)="flagExito = false">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cargando ... -->
+<div tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [ngClass]="(flagLoad) ? 'modal modalApp' : 'modal fade modal-md'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">                  
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-lg-12" style="text-align: center !important;">
+                <img src="../../../../assets/images/loading-9414_256.gif" alt="Espera " style="max-width: 833px; vertical-align: middle !important;">
+              </div>                              
+          </div>
+      </div>                  
+    </div>
+  </div>
+</div>
