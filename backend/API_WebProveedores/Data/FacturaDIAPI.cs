@@ -24,14 +24,14 @@ namespace WebProov_API.Data
         }
 
 
-        public List<Documento> GetListaFechaPagoByRuc(string ruc, string fi, string ff, string estado)
+        public List<Documento> GetListaFechaPagoByRuc(string ruc, string fi, string ff, string estado, string sucursal, string numero)
         {
             try
             {
                 Documento oFact = new Documento();
                 List<Documento> listFact = new List<Documento>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                oRS.DoQuery(Queries.GetFacturasOrdeByDateByRUC(ruc, fi, ff, estado));
+                oRS.DoQuery(Queries.GetFacturasOrdeByDateByRUC(ruc, fi, ff, estado, sucursal, numero));
                 if (oRS.RecordCount == 0)
                     return listFact;
                 for (int i = 0; i < oRS.RecordCount; i++)
@@ -81,7 +81,7 @@ namespace WebProov_API.Data
                 DocumentoFactXls oFact = new DocumentoFactXls();
                 List<DocumentoFactXls> listFact = new List<DocumentoFactXls>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                oRS.DoQuery(Queries.GetFacturasOrdeByDateByRUC(ruc, fi, ff, estado));
+                oRS.DoQuery(Queries.GetFacturasOrdeByDateByRUC(ruc, fi, ff, estado,"",""));
                 if (oRS.RecordCount == 0)
                     return "";
                 for (int i = 0; i < oRS.RecordCount; i++)
@@ -141,7 +141,7 @@ namespace WebProov_API.Data
                 Recordset oRs = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
 
                 if (document.Archivo != null && document.Archivo != string.Empty &&
-                    document.Archivo2 != null && document.Archivo2 != string.Empty &&
+                    //document.Archivo2 != null && document.Archivo2 != string.Empty &&
                     document.Archivo3 != null && document.Archivo3 != string.Empty)
                 {
                     Recordset rs = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -166,16 +166,19 @@ namespace WebProov_API.Data
                     oATT.Lines.SourcePath = Path.GetDirectoryName(path);
                     oATT.Lines.Override = BoYesNoEnum.tYES;
 
-                    oATT.Lines.Add();
-
                     //CDR
-                    xRuta = path + "CDR_" + document.NomArchivo2;
-                    File.WriteAllBytes(xRuta, Convert.FromBase64String(document.Archivo2));
+                    if (document.Archivo2 != null && document.Archivo2 != string.Empty)
+                    {
+                        oATT.Lines.Add();
 
-                    oATT.Lines.FileName = Path.GetFileNameWithoutExtension("CDR_" + document.NomArchivo2);
-                    oATT.Lines.FileExtension = Path.GetExtension(document.NomArchivo2).Replace(".", "");
-                    oATT.Lines.SourcePath = Path.GetDirectoryName(path);
-                    oATT.Lines.Override = BoYesNoEnum.tYES;
+                        xRuta = path + "CDR_" + document.NomArchivo2;
+                        File.WriteAllBytes(xRuta, Convert.FromBase64String(document.Archivo2));
+
+                        oATT.Lines.FileName = Path.GetFileNameWithoutExtension("CDR_" + document.NomArchivo2);
+                        oATT.Lines.FileExtension = Path.GetExtension(document.NomArchivo2).Replace(".", "");
+                        oATT.Lines.SourcePath = Path.GetDirectoryName(path);
+                        oATT.Lines.Override = BoYesNoEnum.tYES;
+                    }
 
                     oATT.Lines.Add();
 
@@ -246,7 +249,7 @@ namespace WebProov_API.Data
                 string xRucSuc = oRs.Fields.Item(0).Value;
 
                 double impDif = 0;
-                xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString().PadLeft(8, '0'), xRucPro, xRucSuc, ref impDif);
+                xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
                 if (xRpta != "")
                     throw new Exception(xRpta);
 
@@ -763,7 +766,7 @@ namespace WebProov_API.Data
                 string xRucSuc = rs.Fields.Item(0).Value;
 
                 double impDif = 0;
-                xRpta = validarXML(xRutaXML, oOrden.DocCurrency, oOrden.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString().PadLeft(8, '0'), xRucPro, xRucSuc, ref impDif);
+                xRpta = validarXML(xRutaXML, oOrden.DocCurrency, oOrden.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
                 if (xRpta != "")
                     throw new Exception(xRpta);
 
@@ -1259,6 +1262,8 @@ namespace WebProov_API.Data
                 if (n1.Name == "cbc:ID")
                 {
                     xSerieNumero = n1.InnerText;
+                    string[] xNroSer = xSerieNumero.Split('-');
+                    xSerieNumero = xNroSer[0] + "-" + Convert.ToInt32(xNroSer[1]).ToString();
                 }
 
                 if (n1.Name == "cac:AccountingSupplierParty")
@@ -1312,19 +1317,29 @@ namespace WebProov_API.Data
                     xMonedaXML = n1.InnerText;
                 }
 
-                if (n1.Name == "cac:TaxTotal")
+                //if (n1.Name == "cac:TaxTotal")
+                //{
+                //    foreach (XmlNode n2 in n1.ChildNodes)
+                //    {
+                //        if (n2.Name == "cac:TaxSubtotal")
+                //        {
+                //            foreach (XmlNode n3 in n2.ChildNodes)
+                //            {
+                //                if (n3.Name == "cbc:TaxableAmount")
+                //                {
+                //                    xImportXML = Convert.ToDouble(n3.InnerText);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+                if (n1.Name == "cac:PaymentTerms")
                 {
                     foreach (XmlNode n2 in n1.ChildNodes)
                     {
-                        if (n2.Name == "cac:TaxSubtotal")
+                        if (n2.Name == "cbc:Amount")
                         {
-                            foreach (XmlNode n3 in n2.ChildNodes)
-                            {
-                                if (n3.Name == "cbc:TaxableAmount")
-                                {
-                                    xImportXML = Convert.ToDouble(n3.InnerText);
-                                }
-                            }
+                            xImportXML = Convert.ToDouble(n2.InnerText);
                         }
                     }
                 }
@@ -1344,8 +1359,8 @@ namespace WebProov_API.Data
 
             if (xImportXML != importe)
             {
-                //if (Math.Abs(xImportXML - importe) > xImporteRango)
-                //    xRpta += $"\n - El importe del XML es diferente al importe del documento.\n Importe XML: {xImportXML.ToString("N2")}, Importe Documento: {importe.ToString("N2")}\n";
+                if (Math.Abs(xImportXML - importe) > xImporteRango)
+                    xRpta += $"\n - El importe del XML es diferente al importe del documento.\n Importe XML: {xImportXML.ToString("N2")}, Importe Documento: {importe.ToString("N2")}\n";
                 impDif = importe-xImportXML;
             }
 

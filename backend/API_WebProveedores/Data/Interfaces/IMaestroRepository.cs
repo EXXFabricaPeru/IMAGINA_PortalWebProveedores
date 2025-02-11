@@ -15,5 +15,6 @@ namespace WebProov_API.Data.Interfaces
         List<Maestro> getConfiguracion();
         List<Maestro> getProveedorFactoring();
         List<Maestro> getFormatos();
+        List<Maestro> getSucursales();
     }
 }

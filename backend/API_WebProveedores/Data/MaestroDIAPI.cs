@@ -256,21 +256,25 @@ namespace WebProov_API.Data
             return oLista;
         }
 
-        public string getNameSucursal(string code)
+        public List<Maestro> getSucursales()
         {
-            string xSucursal;
+            List<Maestro> xSucursal = new List<Maestro>();
             try
             {
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 oRS.DoQuery(Queries.getSucursal());
-                if (oRS.RecordCount == 0)
-                    return "No hay sucursales";
-
-                xSucursal = oRS.Fields.Item(1).Value;
+                for (int i = 0; i < oRS.RecordCount; i++)
+                {
+                    Maestro item = new Maestro();
+                    item.Codigo = oRS.Fields.Item(0).Value.ToString();
+                    item.Descripcion = oRS.Fields.Item(1).Value;
+                    xSucursal.Add(item);
+                    oRS.MoveNext();
+                }
             }
             catch(Exception ex) 
             {
-                xSucursal = ex.Message;
+                throw ex;
             }
             return xSucursal;
         }

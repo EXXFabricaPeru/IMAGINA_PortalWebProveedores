@@ -25,11 +25,11 @@ namespace WebProov_API.Controllers
 
 
         [HttpGet("Lista/{ruc}/{fi}/{ff}")]
-        public ActionResult<List<FacturaByFPRucRead>> GetFacturaByFPRucList(string ruc, string fi, string ff, string estado)
+        public ActionResult<List<FacturaByFPRucRead>> GetFacturaByFPRucList(string ruc, string fi, string ff, string estado, string sucursal, string numero)
         {
             try
             {
-                var facturas = _repo.GetListaFechaPagoByRuc(ruc, fi, ff, estado);
+                var facturas = _repo.GetListaFechaPagoByRuc(ruc, fi, ff, estado, sucursal, numero);
 
                 if (facturas == null)
                     return NotFound();

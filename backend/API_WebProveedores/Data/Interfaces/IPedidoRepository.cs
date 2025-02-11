@@ -6,7 +6,7 @@ namespace WebProov_API.Data.Interfaces
 {
     public interface IPedidoRepository : IDocumentRepository
     {       
-        List<Documento> GetListaByRuc(string ruc, string fecIni, string fecFin, string estado);
+        List<Documento> GetListaByRuc(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero);
 
         string ConfirmarOC(Documento pedido);
 
@@ -16,7 +16,7 @@ namespace WebProov_API.Data.Interfaces
 
         Documento GetConformidadAprById(int id);
 
-        List<Documento> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado);
+        List<Documento> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero);
 
         List<Documento> GetConformidadDisponible(string ruc, string fecIni, string fecFin, string sucursal);
 

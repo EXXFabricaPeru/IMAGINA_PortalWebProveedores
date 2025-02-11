@@ -182,6 +182,23 @@ namespace WebProov_API.Controllers
             }
         }
 
+        [HttpGet("Sucursales")]
+        public ActionResult<List<Maestro>> getSucursales()
+        {
+            try
+            {
+                List<Maestro> maestro = _repo.getSucursales();
+
+                if (maestro == null)
+                    maestro = new List<Maestro>();
+
+                return Ok(_mapper.Map<List<Maestro>>(maestro));
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpGet("Formatos")]
         public ActionResult<List<Maestro>> getFormatos()
         {

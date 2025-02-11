@@ -42,11 +42,11 @@ namespace WebProov_API.Controllers
         }
 
         [HttpGet("Lista/{ruc}/{fecIni}/{fecFin}")]
-        public ActionResult<List<PedidoByRucRead>> GetPedidoByRucList(string ruc, string fecIni, string fecFin, string estado)
+        public ActionResult<List<PedidoByRucRead>> GetPedidoByRucList(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             try
             {
-                var pedido = _repo.GetListaByRuc(ruc, fecIni, fecFin, estado);
+                var pedido = _repo.GetListaByRuc(ruc, fecIni, fecFin, estado, sucursal, numero);
 
                 if (pedido == null)
                     return NotFound();
@@ -115,11 +115,11 @@ namespace WebProov_API.Controllers
         }
 
         [HttpGet("Conformidad/Lista/{ruc}/{fecIni}/{fecFin}")]
-        public ActionResult<List<PedidoByRucRead>> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado)
+        public ActionResult<List<PedidoByRucRead>> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             try
             {
-                var pedido = _repo.GetConformidadByRucList(ruc, fecIni, fecFin, estado);
+                var pedido = _repo.GetConformidadByRucList(ruc, fecIni, fecFin, estado, sucursal, numero);
 
                 if (pedido == null)
                     return NotFound();

@@ -158,14 +158,14 @@ namespace WebProov_API.Data
             }
         }
 
-        public List<Documento> GetListaByRuc(string ruc, string fecIni, string fecFin, string estado)
+        public List<Documento> GetListaByRuc(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             try
             {
                 Documento ped = new Documento();
                 List<Documento> listPed = new List<Documento>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                string oQuery = Queries.GetPedidosByRUC(ruc, fecIni, fecFin, estado);
+                string oQuery = Queries.GetPedidosByRUC(ruc, fecIni, fecFin, estado, sucursal, numero);
                 oRS.DoQuery(oQuery);
                 if (oRS.RecordCount == 0)
                     return listPed;
@@ -204,7 +204,7 @@ namespace WebProov_API.Data
                 DocumentoXls ped = new DocumentoXls();
                 List<DocumentoXls> listPed = new List<DocumentoXls>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                oRS.DoQuery(Queries.GetPedidosByRUC(ruc, fecIni, fecFin, estado));
+                oRS.DoQuery(Queries.GetPedidosByRUC(ruc, fecIni, fecFin, estado, "", ""));
                 if (oRS.RecordCount == 0)
                     return "";
 
@@ -920,14 +920,14 @@ namespace WebProov_API.Data
             }
         }
 
-        public List<Documento> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado)
+        public List<Documento> GetConformidadByRucList(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             try
             {
                 Documento ped = new Documento();
                 List<Documento> listPed = new List<Documento>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                oRS.DoQuery(Queries.GetConformidadByRUC(ruc, fecIni, fecFin, estado));
+                oRS.DoQuery(Queries.GetConformidadByRUC(ruc, fecIni, fecFin, estado, sucursal, numero));
                 if (oRS.RecordCount == 0)
                     return listPed;
                 for (int i = 0; i < oRS.RecordCount; i++)
@@ -1011,7 +1011,7 @@ namespace WebProov_API.Data
                 DocumentoXls ped = new DocumentoXls();
                 List<DocumentoXls> listPed = new List<DocumentoXls>();
                 Recordset oRS = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                oRS.DoQuery(Queries.GetConformidadByRUC(ruc, fecIni, fecFin, estado));
+                oRS.DoQuery(Queries.GetConformidadByRUC(ruc, fecIni, fecFin, estado, "", ""));
                 if (oRS.RecordCount == 0)
                     return "";
                 for (int i = 0; i < oRS.RecordCount; i++)

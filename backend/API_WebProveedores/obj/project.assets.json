@@ -1494,6 +1494,16 @@
   },
   "logs": [
     {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "El paquete \"DotNetZip\" 1.16.0 tiene una vulnerabilidad de gravedad alta conocida, https://github.com/advisories/GHSA-xhg6-9j5j-w4vf",
+      "libraryId": "DotNetZip",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
       "code": "NU1902",
       "level": "Warning",
       "warningLevel": 1,

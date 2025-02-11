@@ -134,10 +134,10 @@ namespace WebProov_API.Util
         #endregion
 
         #region Ordenes de Compra
-        public static string GetPedidosByRUC(string ruc, string fecIni, string fecFin, string estado)
+        public static string GetPedidosByRUC(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             m_sSQL.Length = 0;
-            m_sSQL.Append($"CALL \"EXX_WP_OrdenCompra_Listar\" ('{ruc}','{fecIni}','{fecFin}','{estado}')");
+            m_sSQL.Append($"CALL \"EXX_WP_OrdenCompra_Listar\" ('{ruc}','{fecIni}','{fecFin}','{estado}',{sucursal},{numero})");
             return m_sSQL.ToString();
         }
         #endregion
@@ -153,10 +153,10 @@ namespace WebProov_API.Util
 
             return m_sSQL.ToString();
         }
-        public static string GetConformidadByRUC(string ruc, string fecIni, string fecFin, string estado)
+        public static string GetConformidadByRUC(string ruc, string fecIni, string fecFin, string estado, string sucursal, string numero)
         {
             m_sSQL.Length = 0;
-            m_sSQL.Append($"CALL \"EXX_WP_ConformidadServicio_Listar\" ('{ruc}','{fecIni}','{fecFin}','{estado}')");
+            m_sSQL.Append($"CALL \"EXX_WP_ConformidadServicio_Listar\" ('{ruc}','{fecIni}','{fecFin}','{estado}',{sucursal},'{numero}')");
             return m_sSQL.ToString();
         }
         public static string GetConformidadDisponible(string ruc, string fecIni, string fecFin, string sucursal)
@@ -179,10 +179,10 @@ namespace WebProov_API.Util
         #endregion
 
         #region Facturas
-        public static string GetFacturasOrdeByDateByRUC(string ruc, string fi, string ff, string estado)
+        public static string GetFacturasOrdeByDateByRUC(string ruc, string fi, string ff, string estado, string sucursal, string numero)
         {
             m_sSQL.Length = 0;
-            m_sSQL.Append($"CALL \"EXX_WP_FacturaProv_Listar\" ('{ruc}','{fi}','{ff}','{estado}')");
+            m_sSQL.Append($"CALL \"EXX_WP_FacturaProv_Listar\" ('{ruc}','{fi}','{ff}','{estado}',{sucursal},'{numero}')");
             return m_sSQL.ToString();
         }
 

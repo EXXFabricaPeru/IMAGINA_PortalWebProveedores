@@ -6,7 +6,7 @@ namespace WebProov_API.Data.Interfaces
 {
     public interface IFacturaRepository
     {        
-        List<Documento> GetListaFechaPagoByRuc(string ruc, string fi, string ff, string estado);
+        List<Documento> GetListaFechaPagoByRuc(string ruc, string fi, string ff, string estado, string sucursal, string numero);
 
         string GetListaDescargar(string ruc, string fi, string ff, string estado);
 
