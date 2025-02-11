@@ -50,4 +50,8 @@ export class MaestroService {
   getFormatos(){
     return this.http.get(`${ this.url }/Formatos`);
   }
+
+  getSucursales(){
+    return this.http.get(`${ this.url }/Sucursales`);
+  }
 }

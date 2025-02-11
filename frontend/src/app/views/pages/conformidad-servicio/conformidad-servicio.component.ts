@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentoService } from 'src/app/services/documento.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, AlertComponent, ContainerComponent, RowComponent, ColComponent, CardGroupComponent, 
   FormDirective, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective,
   TableModule, UtilitiesModule } from '@coreui/angular';
 import { NgStyle, CommonModule } from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import { PagProveedorPipe } from 'src/app/pipes/pag-proveedor.pipe';
+import { MaestroService } from 'src/app/services/maestro.service';
 
 @Component({
   selector: 'app-conformidad-servicio',
@@ -46,8 +48,9 @@ export class ConformidadServicioComponent implements OnInit {
   pagina: number = 1;
   fecDesde: string = "";
   fecHasta: string = "";
+  listaSucursales: any = [];
   
-  constructor(private _route: ActivatedRoute, private router: Router, private documentoService: DocumentoService){
+  constructor(private _route: ActivatedRoute, private router: Router, private documentoService: DocumentoService, private excelService: ExcelService, private maestroService: MaestroService){
     const dataTemp: any = sessionStorage.getItem("prov");
     const dataProv: any = JSON.parse(dataTemp);
     // console.log("prov", dataProv)
@@ -155,6 +158,10 @@ export class ConformidadServicioComponent implements OnInit {
     }else{
       this.router.navigateByUrl(`/login`, { replaceUrl: true });
     }
+    
+    maestroService.getSucursales().toPromise().then(sucursales => {
+      this.listaSucursales = sucursales
+    })
   }
 
   async buscar(){
@@ -164,12 +171,14 @@ export class ConformidadServicioComponent implements OnInit {
     const txtDesde = document.getElementById("txtDesde") as HTMLInputElement;
     const txtHasta = document.getElementById("txtHasta") as HTMLInputElement;
     const cmbEstado =  document.getElementById("cmbEstado") as HTMLSelectElement;
+    const txtNumero = document.getElementById("txtNumero") as HTMLInputElement;
+    const cmSucursal =  document.getElementById("cmSucursal") as HTMLSelectElement;
 
     const fi: string = txtDesde.value.replace("-","").replace("-","");
     const ff: string = txtHasta.value.replace("-","").replace("-","");
     // console.log("ruc", this._rucProveedor)    
     // const data: any =
-     await this.documentoService.getConformidad(this._rucProveedor, fi, ff, cmbEstado.value).toPromise().then(pedidos => {
+     await this.documentoService.getConformidad(this._rucProveedor, fi, ff, cmbEstado.value, cmSucursal.value, txtNumero.value).toPromise().then(pedidos => {
       // console.log("conformidad->", pedidos);
       this.listaPedidos = pedidos;
       
@@ -210,36 +219,40 @@ export class ConformidadServicioComponent implements OnInit {
   }
 
   async descargar(){
-    const txtDesde = document.getElementById("txtDesde") as HTMLInputElement;
-    const txtHasta = document.getElementById("txtHasta") as HTMLInputElement;
-    const cmbEstado =  document.getElementById("cmbEstado") as HTMLSelectElement;
-
-    const fi: string = txtDesde.value.replace("-","").replace("-","");
-    const ff: string = txtHasta.value.replace("-","").replace("-","");
-
-    this.documentoService.getConformidadDownload(this._rucProveedor, fi,ff,cmbEstado.value).toPromise().then( data => {
-      console.log("file", data);
-      const archivo = data || "";
-      var byteCharacters = atob(archivo.toString());
-      var byteNumbers = new Array(byteCharacters.length);
-
-      for (var i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-
-      var byteArray = new Uint8Array(byteNumbers); 
- 
-      let filename = "pedido_" + fi + ff + ".xlsx";  
-      let binaryData = [];
-      binaryData.push(byteArray);
-      
-      let downloadLink = document.createElement('a');
-      downloadLink.href = window.URL.createObjectURL(
-      new Blob(binaryData, { type: 'blob' }));
-      downloadLink.setAttribute('download', filename);
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-    });
+    this.excelService.exportAsExcelFile(this.listaPedidos, this._rucProveedor);
   }
+
+  // async descargar(){
+  //   const txtDesde = document.getElementById("txtDesde") as HTMLInputElement;
+  //   const txtHasta = document.getElementById("txtHasta") as HTMLInputElement;
+  //   const cmbEstado =  document.getElementById("cmbEstado") as HTMLSelectElement;
+
+  //   const fi: string = txtDesde.value.replace("-","").replace("-","");
+  //   const ff: string = txtHasta.value.replace("-","").replace("-","");
+
+  //   this.documentoService.getConformidadDownload(this._rucProveedor, fi,ff,cmbEstado.value).toPromise().then( data => {
+  //     console.log("file", data);
+  //     const archivo = data || "";
+  //     var byteCharacters = atob(archivo.toString());
+  //     var byteNumbers = new Array(byteCharacters.length);
+
+  //     for (var i = 0; i < byteCharacters.length; i++) {
+  //         byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //     }
+
+  //     var byteArray = new Uint8Array(byteNumbers); 
+ 
+  //     let filename = "pedido_" + fi + ff + ".xlsx";  
+  //     let binaryData = [];
+  //     binaryData.push(byteArray);
+      
+  //     let downloadLink = document.createElement('a');
+  //     downloadLink.href = window.URL.createObjectURL(
+  //     new Blob(binaryData, { type: 'blob' }));
+  //     downloadLink.setAttribute('download', filename);
+  //     document.body.appendChild(downloadLink);
+  //     downloadLink.click();
+  //   });
+  // }
 
 }

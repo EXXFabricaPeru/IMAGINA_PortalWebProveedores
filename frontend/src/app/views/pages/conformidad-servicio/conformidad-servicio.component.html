@@ -29,6 +29,19 @@
                 <button cButton class="btn-imagina" (click)="descargar()" style="width: 100px;" >Descargar</button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <label class="form-control-label" >Sucursal: </label>
+                <select class="form-control" id="cmSucursal">
+                    <option value="0" selected>--Todos--</option>
+                    <option *ngFor="let item of listaSucursales" [value]="item.codigo">{{ item.descripcion }}</option>                    
+                </select>
+            </div>
+            <div class="col-lg-3">
+                <label class="form-control-label" >Nro. Guia: </label>
+                <input class="form-control" type="text" id="txtNumero" />
+            </div>
+        </div>
         <!-- <br> -->
       <table cTable>
         <thead cTableColor="dark">

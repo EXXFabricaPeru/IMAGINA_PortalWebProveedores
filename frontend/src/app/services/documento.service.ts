@@ -11,8 +11,8 @@ export class DocumentoService {
 
   constructor(private http: HttpClient) { }
 
-  getPedidos(ruc: string, fecIni: string, fecFin: string, estado: string){
-    return this.http.get(`${ this.url }/Pedido/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }`);
+  getPedidos(ruc: string, fecIni: string, fecFin: string, estado: string, sucursal: string, numero: string){
+    return this.http.get(`${ this.url }/Pedido/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }&sucursal=${ sucursal }&numero=${ numero }`);
   }
 
   getPedidosDownload(ruc: string, fecIni: string, fecFin: string, estado: string){
@@ -27,8 +27,8 @@ export class DocumentoService {
     return this.http.post(`${ this.url }/Pedido/Confirmar`, data, {responseType: 'text'});
   }
 
-  getConformidad(ruc: string, fecIni: string, fecFin: string, estado: string){
-    return this.http.get(`${ this.url }/Pedido/Conformidad/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }`);
+  getConformidad(ruc: string, fecIni: string, fecFin: string, estado: string, sucursal: string, numero: string){
+    return this.http.get(`${ this.url }/Pedido/Conformidad/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }&sucursal=${ sucursal }&numero=${ numero }`);
   }
 
   getConformidadDownload(ruc: string, fecIni: string, fecFin: string, estado: string){
@@ -51,8 +51,8 @@ export class DocumentoService {
     return this.http.post(`${ this.url }/Pedido/AprobarCS`, data, {responseType: 'text'});
   }
 
-  getFacturas(ruc: string, fecIni: string, fecFin: string, estado: string){   
-    return this.http.get(`${ this.url }/Factura/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }`);
+  getFacturas(ruc: string, fecIni: string, fecFin: string, estado: string, sucursal: string, numero: string){   
+    return this.http.get(`${ this.url }/Factura/Lista/${ ruc }/${ fecIni }/${ fecFin }?estado=${ estado }&sucursal=${ sucursal }&numero=${ numero }`);
   }
 
   getFacturasDownload(ruc: string, fecIni: string, fecFin: string, estado: string){   

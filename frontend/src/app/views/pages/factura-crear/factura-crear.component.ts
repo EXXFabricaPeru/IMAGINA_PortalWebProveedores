@@ -415,9 +415,9 @@ export class FacturaCrearComponent {
         xVal = "Tiene que adjuntar el XML";
       }
 
-      if(this.nomArchivo2 == ""){
-        xVal = "Tiene que adjuntar el CDR";
-      }
+      // if(this.nomArchivo2 == ""){
+      //   xVal = "Tiene que adjuntar el CDR";
+      // }
 
       if(this.nomArchivo3 == ""){
         xVal = "Tiene que adjuntar el PDF";
@@ -439,7 +439,7 @@ export class FacturaCrearComponent {
       this.pedido.nomArchivo = this.nomArchivo1;
 
       this.pedido.archivo2 = this.archivo2;
-      this.pedido.nomArchivo2 = this.nomArchivo1;
+      this.pedido.nomArchivo2 = this.nomArchivo2;
 
       this.pedido.archivo3 = this.archivo3;
       this.pedido.nomArchivo3 = this.nomArchivo3;
@@ -660,7 +660,7 @@ export class FacturaCrearComponent {
       let prop = ""
       prop = "cbc:ID"
       const { [prop]: serieNumero } = Invoice
-      // console.log("Serie y Numero", serieNumero);
+      console.log("Serie y Numero", serieNumero);
       const valSerie = serieNumero._text.split("-")
       txtSerie.value = valSerie[0];
       txtNumero.value = valSerie[1];
