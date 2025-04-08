@@ -249,7 +249,8 @@ namespace WebProov_API.Data
                 string xRucSuc = oRs.Fields.Item(0).Value;
 
                 double impDif = 0;
-                xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
+                   //xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
+               xRpta = validarXML(xRutaXML, oGuia.DocCurrency, document.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
                 if (xRpta != "")
                     throw new Exception(xRpta);
 
