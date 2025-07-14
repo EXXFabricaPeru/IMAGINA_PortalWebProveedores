@@ -233,6 +233,8 @@ namespace WebProov_API.Data
                     }
                 }
 
+
+
                 Documents oFactura = _company.GetBusinessObject(BoObjectTypes.oDrafts);//_company.GetBusinessObject(BoObjectTypes.oPurchaseInvoices);
                 Documents oGuia = _company.GetBusinessObject(BoObjectTypes.oPurchaseDeliveryNotes);
 
@@ -249,8 +251,9 @@ namespace WebProov_API.Data
                 string xRucSuc = oRs.Fields.Item(0).Value;
 
                 double impDif = 0;
-                   //xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
-               xRpta = validarXML(xRutaXML, oGuia.DocCurrency, document.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
+                //xRpta = validarXML(xRutaXML, oGuia.DocCurrency, oGuia.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
+
+                xRpta = validarXML(xRutaXML, oGuia.DocCurrency, document.DocTotal, document.DocTotalFC, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
                 if (xRpta != "")
                     throw new Exception(xRpta);
 
@@ -462,6 +465,7 @@ namespace WebProov_API.Data
                         xxPorcent = dPorceFondoGarantia < 1 ? dPorceFondoGarantia : Math.Round(dPorceFondoGarantia / 100, 2);
                         double xxImporte = dMontoFondoGarantia * xxPorcent;
                         dImporFondoGarantia += xxImporte;
+                        dImporFondoGarantia = Math.Round(dImporFondoGarantia, 2);
                     }
                 }
 
@@ -498,11 +502,11 @@ namespace WebProov_API.Data
                         DateTime sFecha1;
                         if (DateTime.Now.Month + 1 <= 12)
                         {
-                            sFecha1 = new DateTime(DateTime.Now.Year, (DateTime.Now.Month + 1), DateTime.Now.Day);
+                            sFecha1 = new DateTime(DateTime.Now.Year, (DateTime.Now.Month + 1), 5);
                         }
                         else
                         {
-                            sFecha1 = new DateTime((DateTime.Now.Year + 1), 1, DateTime.Now.Day);
+                            sFecha1 = new DateTime((DateTime.Now.Year + 1), 1, 5);
                         }
 
                         //Se setea el número de cuotas
@@ -530,10 +534,41 @@ namespace WebProov_API.Data
                     }
 
 
+
+                    //Ultima Cuota
+                    oFactura.Installments.DueDate = DateTime.Now.AddDays(30);// oGuia.DocDueDate;
+                    if (oGuia.DocCurrency == "SOL")
+                    {
+                        //AJ
+                        //double XxImporteGuia = oGuia.DocTotal;
+
+                        double XxImporteGuia = xImporteGuia;
+
+                        //double xxImporte = XxImporteGuia - dCuotaDetra - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
+
+                        //double xxImporte = XxImporteGuia - dCuotaDetraFinal - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
+                        double xxImporte = XxImporteGuia - dCuotaDetraFinal - dImporFondoGarantia - sImporteAnti;
+
+                        oFactura.Installments.Total = Math.Round(xxImporte, 2);//oGuia.DocTotal - dCuotaDetra - dImporFondoGarantia - (oListaAnticipo.Count > 0 ? oListaAnticipo.Sum(t=>t.Importe) * 1.18 : 0);
+                    }
+                    else
+                    {
+                        //double xxImporteUltima = oGuia.DocTotalFc - dCuotaDetra - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
+                        double xxImporteUltima = xImporteGuia - dCuotaDetraFinal - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
+                        oFactura.Installments.TotalFC = xxImporteUltima;
+                    }
+
+                    oFactura.Installments.UserFields.Fields.Item("U_EXC_FONGAR").Value = "N";
+                    oFactura.Installments.UserFields.Fields.Item("U_EXX_CONFTIPODET").Value = "No";
+                    oFactura.Installments.Add();
+
+
+
                     //Cuota de fondo de garantia
                     if (dImporFondoGarantia > 0)
                     {
-                        dImporFondoGarantia = Math.Round(Math.Round(Math.Round(xTotalBase, 2)) * xxPorcent, 2);
+                        //dImporFondoGarantia = Math.Round(Math.Round(Math.Round(xTotalBase, 2)) * xxPorcent, 2);
+                        //dImporFondoGarantia = Math.Round(Math.Round(Math.Round(xTotalBase, 2)) * xxPorcent, 2);
                         oFactura.Installments.DueDate = xFecFinCon.AddMonths(12);
                         if (oGuia.DocCurrency == "SOL")
                         {
@@ -546,35 +581,15 @@ namespace WebProov_API.Data
 
                         oFactura.Installments.UserFields.Fields.Item("U_EXC_FONGAR").Value = "Y";
                         oFactura.Installments.UserFields.Fields.Item("U_EXX_BLOPAG").Value = "Y";
+                        oFactura.Installments.UserFields.Fields.Item("U_EXX_CONFTIPODET").Value = "No";
                         oFactura.Installments.Add();
                     }
 
-                    //Ultima Cuota
-                    oFactura.Installments.DueDate = oGuia.DocDueDate;
-                    if (oGuia.DocCurrency == "SOL")
-                    {
-                        //AJ
-                        //double XxImporteGuia = oGuia.DocTotal;
-
-                        double XxImporteGuia = xImporteGuia;
-
-                        //double xxImporte = XxImporteGuia - dCuotaDetra - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
-
-                        double xxImporte = XxImporteGuia - dCuotaDetraFinal - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
-
-                        oFactura.Installments.Total = Math.Round(xxImporte, 2);//oGuia.DocTotal - dCuotaDetra - dImporFondoGarantia - (oListaAnticipo.Count > 0 ? oListaAnticipo.Sum(t=>t.Importe) * 1.18 : 0);
-                    }
-                    else
-                    {
-                        //double xxImporteUltima = oGuia.DocTotalFc - dCuotaDetra - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
-                        double xxImporteUltima = xImporteGuia - dCuotaDetraFinal - Math.Round(dImporFondoGarantia, 2) - sImporteAnti;
-                        oFactura.Installments.TotalFC = xxImporteUltima;
-                    }
-
-                    oFactura.Installments.UserFields.Fields.Item("U_EXC_FONGAR").Value = "N";
-                    oFactura.Installments.Add();
                 }
 
+                //if (_company.InTransaction) _company.EndTransaction(BoWfTransOpt.wf_RollBack);
+
+                //throw new Exception("Pruebas");
                 if (oFactura.Add() != 0)
                 {
                     xRpta = _company.GetLastErrorDescription();
@@ -594,7 +609,7 @@ namespace WebProov_API.Data
             {
                 if (_company.InTransaction) _company.EndTransaction(BoWfTransOpt.wf_RollBack);
 
-                xRpta = ex.Message;
+                xRpta = ex.Message;//+ ex.StackTrace;
             }
             finally
             {
@@ -767,7 +782,7 @@ namespace WebProov_API.Data
                 string xRucSuc = rs.Fields.Item(0).Value;
 
                 double impDif = 0;
-                xRpta = validarXML(xRutaXML, oOrden.DocCurrency, oOrden.DocTotal, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
+                xRpta = validarXML(xRutaXML, oOrden.DocCurrency, oOrden.DocTotal,oOrden.DocTotalFc, document.FolioPref + "-" + document.FolioNum.ToString(), xRucPro, xRucSuc, ref impDif);
                 if (xRpta != "")
                     throw new Exception(xRpta);
 
@@ -979,7 +994,7 @@ namespace WebProov_API.Data
                     det.Price = oPor.Lines.Price;
                     det.TaxCode = oPor.Lines.TaxCode;
                     det.PriceAfVAT = oPor.Lines.PriceAfterVAT;
-                    det.LineTotal = oPor.Lines.LineTotal;
+                    det.LineTotal = oPor.DocCurrency=="SOL"? oPor.Lines.LineTotal : oPor.Lines.RowTotalFC;
                     det.WhsCode = oPor.Lines.WarehouseCode;
                     detalle.Add(det);
                     pedido.DetallePedido = detalle;
@@ -1244,7 +1259,7 @@ namespace WebProov_API.Data
             }
         }
 
-        private string validarXML(string xml, string moneda, double importe, string serieNumero, string rucProveedor, string rucSucursal, ref double impDif)
+        private string validarXML(string xml, string moneda, double importe, double importeFC, string serieNumero, string rucProveedor, string rucSucursal, ref double impDif)
         {
             XmlDocument xmlRuta = new XmlDocument();
             xmlRuta.Load(xml);
@@ -1334,11 +1349,11 @@ namespace WebProov_API.Data
                 //        }
                 //    }
                 //}
-                if (n1.Name == "cac:PaymentTerms")
+                if (n1.Name == "cac:LegalMonetaryTotal")
                 {
                     foreach (XmlNode n2 in n1.ChildNodes)
                     {
-                        if (n2.Name == "cbc:Amount")
+                        if (n2.Name == "cbc:PayableAmount")
                         {
                             xImportXML = Convert.ToDouble(n2.InnerText);
                         }
@@ -1358,18 +1373,31 @@ namespace WebProov_API.Data
                 xRpta += $"\n - La moneda del XML es diferente a la moneda del documento.\n Moneda XML: {xMonedaXML}, Moneda Documento: {moneda}\n";
             }
 
-            if (xImportXML != importe)
+            if (moneda == "SOL")
             {
-                if (Math.Abs(xImportXML - importe) > xImporteRango)
-                    xRpta += $"\n - El importe del XML es diferente al importe del documento.\n Importe XML: {xImportXML.ToString("N2")}, Importe Documento: {importe.ToString("N2")}\n";
-                impDif = importe-xImportXML;
+                if (xImportXML != importe)
+                {
+                    if (Math.Abs(xImportXML - importe) > xImporteRango)
+                        xRpta += $"\n - El importe del XML es diferente al importe del documento.\n Importe XML: {xImportXML.ToString("N2")}, Importe Documento: {importe.ToString("N2")}\n";
+                    impDif = importe - xImportXML;
+                }
             }
+            else
+            {
+                if (xImportXML != importeFC)
+                {
+                    if (Math.Abs(xImportXML - importeFC) > xImporteRango)
+                        xRpta += $"\n - El importe del XML es diferente al importe del documento.\n Importe XML: {xImportXML.ToString("N2")}, Importe Documento: {importeFC.ToString("N2")}\n";
+                    impDif = importeFC - xImportXML;
+                }
+            }
+            
 
             if (xRucPro != rucProveedor)
             {
                 xRpta += $"\n - El RUC emisor del XML es diferente al RUC emisor del documento.\n RUC XML: {xRucPro}, RUC Documento: {rucProveedor}\n";
             }
-            
+
             if (xRucCli != rucSucursal)
             {
                 xRpta += $"\n - El RUC receptor del XML es diferente al RUC emisor del documento.\n RUC XML: {xRucCli}, RUC Documento: {rucSucursal}\n";

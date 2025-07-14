@@ -109,7 +109,7 @@ namespace WebProov_API.Data
                 List<DetallePedido> detalle = new List<DetallePedido>();
 
                 string oQuery = $"SELECT T1.\"ItemCode\", \"Dscription\", \"Price\", \"Quantity\", \"OpenQty\", \"VisOrder\", \"TaxCode\", \"WhsCode\", " +
-                                $"\"LineTotal\", \"UomCode\", \"PQTReqDate\", \"InvntItem\" " +
+                                $"\"LineTotal\", \"UomCode\", \"PQTReqDate\", \"InvntItem\" , \"TotalFrgn\" " +
                                 $"FROM POR1 T1 " +
                                 $"INNER JOIN OITM T2 ON T2.\"ItemCode\" = T1.\"ItemCode\" " +
                                 $"WHERE T1.\"DocEntry\"={id}";
@@ -131,7 +131,7 @@ namespace WebProov_API.Data
                     det.PendQuantity = oRs.Fields.Item("OpenQty").Value;
                     det.UnitMsr = oRs.Fields.Item("UomCode").Value;
                     det.WhsCode = oRs.Fields.Item("WhsCode").Value;
-                    det.LineTotal = oRs.Fields.Item("LineTotal").Value;
+                    det.LineTotal = oPor.DocCurrency == "SOL" ?oRs.Fields.Item("LineTotal").Value: oRs.Fields.Item("TotalFrgn").Value; 
                     det.ShipDate = oRs.Fields.Item("PQTReqDate").Value;
                     //det.Stock = 0;
                     detalle.Add(det);
@@ -794,7 +794,20 @@ namespace WebProov_API.Data
                 pedido.NumAtCard = oPor.NumAtCard;
                 pedido.DocDate = oPor.DocDate;
                 pedido.TaxDate = oPor.TaxDate;
-                pedido.DocDueDate = pedido.DocDate.AddDays(30);
+               
+
+                string xQuery = $"SELECT \"GroupNum\" FROM OPDN Where \"DocEntry\"= {oPor.DocEntry} ";
+                Recordset oRs = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                oRs.DoQuery(xQuery);
+
+                var codPago= oRs.Fields.Item(0).Value;
+                xQuery = $"SELECT \"ExtraMonth\",\"ExtraDays\" FROM OCTG Where \"GroupNum\"= {codPago} ";
+                oRs.DoQuery(xQuery);
+
+                var mes= oRs.Fields.Item(0).Value;
+                var dias= oRs.Fields.Item(1).Value;
+
+                pedido.DocDueDate = DateTime.Now.AddMonths(mes).AddDays(dias); ///pedido.DocDate.AddDays(30);
                 pedido.GroupNum = oPor.GroupNumber;
                 string estado = "";
                 switch (oPor.DocumentStatus)
@@ -839,8 +852,8 @@ namespace WebProov_API.Data
                 pedido.U_EXC_FINCON = oPor.UserFields.Fields.Item("U_EXC_FINCON").Value == fecha ? null : oPor.UserFields.Fields.Item("U_EXC_FINCON").Value;
 
                 //obtenemos el contacto
-                string xQuery = $"SELECT \"lastName\" || ' ' || \"firstName\" FROM OHEM WHERE \"empID\" = {oPor.UserFields.Fields.Item("U_EXC_USRCON").Value} AND COALESCE(\"email\", '') != ''";
-                Recordset oRs = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
+                xQuery = $"SELECT \"lastName\" || ' ' || \"firstName\" FROM OHEM WHERE \"empID\" = {oPor.UserFields.Fields.Item("U_EXC_USRCON").Value} AND COALESCE(\"email\", '') != ''";
+                //Recordset oRs = _company.GetBusinessObject(BoObjectTypes.BoRecordset);
                 oRs.DoQuery(xQuery);
                 pedido.Contacto = oRs.Fields.Item(0).Value;
 
@@ -902,7 +915,7 @@ namespace WebProov_API.Data
                     det.Dscription = oRs.Fields.Item("Dscription").Value;
                     det.Price = oRs.Fields.Item("Price").Value;
                     det.TaxCode = oRs.Fields.Item("TaxCode").Value;
-                    det.LineTotal = oRs.Fields.Item("LineTotal").Value;
+                    det.LineTotal = pedido.DocCur=="SOL"? oRs.Fields.Item("LineTotal").Value : oRs.Fields.Item("TotalFrgn").Value;
                     det.DocEntry = id;
                     det.PendQuantity = oRs.Fields.Item("OpenQty").Value;
                     det.ShipDate = oRs.Fields.Item("ShipDate").Value;
@@ -983,7 +996,7 @@ namespace WebProov_API.Data
                     ped.Item.ItemCode = oRS.Fields.Item("ItemCode").Value;
                     ped.Item.Dscription = oRS.Fields.Item("Dscription").Value;
                     ped.Item.Quantity = oRS.Fields.Item("Quantity").Value;
-                    ped.Item.LineTotal = oRS.Fields.Item("LineTotal").Value;
+                    ped.Item.LineTotal =  oRS.Fields.Item("LineTotal").Value ;
                     ped.Item.TaxCode = oRS.Fields.Item("TaxCode").Value;
                     oRS.MoveNext();
                     listPed.Add(ped);
