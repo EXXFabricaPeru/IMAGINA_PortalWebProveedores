@@ -162,7 +162,13 @@ export class ConformidadServicioMostrarComponent {
 
     
   }
-
+  getDocTotal(row: any): number {
+    //console.log("row", row)  
+    if (!row) return 0;
+    console.log("row", row) 
+    //console.log("row.docCur", row.docCur) 
+    return row.docCur === 'SOL' ? row.docTotal : row.docTotalFC;
+  }
   crearConformidadServicio(){
     this.router.navigateByUrl(`/factura-crear/${ this._docentry }`, { replaceUrl: false });
   }

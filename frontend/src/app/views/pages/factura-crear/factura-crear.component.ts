@@ -332,7 +332,7 @@ export class FacturaCrearComponent {
 
   async guardar(){
     const xpta: string = await this.obtenerDatos();
-    // console.log("factura", this.pedido);
+     console.log("factura", this.pedido);
 
     const txtSerie = document.getElementById("txtSerie") as HTMLInputElement
     const txtNumer = document.getElementById("txtNumero") as HTMLInputElement
@@ -341,22 +341,26 @@ export class FacturaCrearComponent {
 
     const fd = txtFecha.value;
 
-    // console.log("fecha", fd);
+    //console.log("fecha", fd);
 
     let dataSunat: any = { }
     dataSunat.numRuc = this.pedido.licTradNum;
     dataSunat.codComp = "01";
     dataSunat.numeroSerie = txtSerie.value;
+    //console.log("fecha", txtSerie.value);
     dataSunat.numero = txtNumer.value;
+    //console.log("numero", txtNumer.value);
     dataSunat.fechaEmision = fd;
+    //console.log("fechaEmision", fd);
     dataSunat.monto = txtTotal.value.replace(",","")
-
+    //console.log("monto", txtTotal.value.replace(",",""));
+    console.log("xpta", xpta);
     if(xpta != ""){
       this.msgError = xpta;
       this.errorValidacion = true;
       return;
     }
-
+    //console.log("prueba", this.pedido);
     // const dataToken: any = await this.documentoService.obtenerTokenSunat().toPromise();
     // console.log(dataToken);
     // console.log(dataSunat);
@@ -418,11 +422,11 @@ export class FacturaCrearComponent {
       // if(this.nomArchivo2 == ""){
       //   xVal = "Tiene que adjuntar el CDR";
       // }
-
+      //console.log("datos5", "this.pedido");
       if(this.nomArchivo3 == ""){
         xVal = "Tiene que adjuntar el PDF";
       }
-
+      //console.log("datos4", "this.pedido");
       if(this.pedido.u_EXC_FVCAFI != null)
       {
         if(this.nomArchivo5 == ""){
@@ -434,7 +438,7 @@ export class FacturaCrearComponent {
       // }
 
       this.pedido.userReg = this.userProv;
-
+      
       this.pedido.archivo = this.archivo1;
       this.pedido.nomArchivo = this.nomArchivo1;
 
@@ -449,13 +453,14 @@ export class FacturaCrearComponent {
 
       if(this.archivo5 == undefined)
         this.archivo5 == null;
-
+      
       this.pedido.archivo4 = this.archivo4;
       this.pedido.nomArchivo4 = this.nomArchivo4;
 
       this.pedido.archivo5 = this.archivo5;
       this.pedido.nomArchivo5 = this.nomArchivo5;
-
+     
+     
       const xSerie = document.getElementById("txtSerie") as HTMLInputElement
       const xNumero = document.getElementById("txtNumero") as HTMLInputElement
       const xAplicaFac = document.getElementById("cmbAplFact") as HTMLSelectElement
@@ -480,7 +485,7 @@ export class FacturaCrearComponent {
       // }
 
       let xRazonSocial: string = "";
-
+      
       for(let x=0; x<this.listaProvFact.length; x++){
         if(this.listaProvFact[x].cardCode == xProveeFac.value){
           xRazonSocial = this.listaProvFact[x].cardName;
@@ -498,12 +503,25 @@ export class FacturaCrearComponent {
 
       const _table: any = document.querySelector("#gridDoc");
       // console.log(_table);
-
-      for(let i = 1; i < _table.rows.length; i++){
+      console.log("datosxxx", xVal);
+      console.log("this.listaPedidos", this.listaPedidos);
+      //console.log("_table.rows.length", _table.rows.length);
+      //console.log("_table.rows.length", _table.rows);
+      //for(let i = 1; i < _table.rows.length; i++){
+        for(let i = 1; i <= this.listaPedidos.length; i++){
+          console.log("i"+i, this.listaPedidos[i - 1]);
         this.listaPedidos[i - 1].lineTotal = this.listaPedidos[i - 1].lineTotal.toString().replace(",", "");
-        this.listaPedidos[i - 1].pendQuantity = this.listaPedidos[i - 1].pendQuantity.toString().replace(",", "");
+        try
+        {
+          this.listaPedidos[i - 1].pendQuantity = this.listaPedidos[i - 1].pendQuantity.toString().replace(",", "");
+        }  
+        catch(error :any){
+          this.listaPedidos[i - 1].quantity = this.listaPedidos[i - 1].quantity.toString().replace(",", "");
+        }   
+       
         this.listaPedidos[i - 1].price = this.listaPedidos[i - 1].price.toString().replace(",", "");
       }
+      console.log("datoszzz", xVal);
 
     } catch (error: any) {
       xVal = error.toString();
@@ -608,6 +626,8 @@ export class FacturaCrearComponent {
 
     this.pedido.docTotal = subTotal + impuesto;
     this.pedido.vatSum = impuesto;
+    this.pedido.docTotalFC = subTotal + impuesto;
+    this.pedido.vatSumFC = impuesto;
 
     this.modalDialog = false;
   }

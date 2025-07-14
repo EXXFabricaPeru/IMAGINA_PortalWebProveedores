@@ -123,7 +123,13 @@ export class FacturaMostrarComponent {
 
     this.obtenerFactura(docEntry);
   }
-
+ getDocTotal(row: any): number {
+    //console.log("row", row)  
+    if (!row) return 0;
+    console.log("row", row) 
+    //console.log("row.docCur", row.docCur) 
+    return row.docCur === 'SOL' ? row.docTotal : row.docTotalFC;
+  }
   async obtenerFactura(id: string){
     let tipo: string | null;
     tipo = this._route.snapshot.paramMap.get("tipo") || "";

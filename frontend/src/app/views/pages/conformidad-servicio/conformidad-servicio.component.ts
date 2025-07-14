@@ -136,6 +136,15 @@ export class ConformidadServicioComponent implements OnInit {
           value: "",
           visible: true
         },
+        /*{
+          label: "ImporteFC",
+          key: "docTotalFC",
+          subKey: "",
+          customClass: "derechaFC",
+          type: "",
+          value: "",
+          visible: false
+        },*/
         {
           label: "Estado",
           key: "docStatus",
@@ -163,7 +172,13 @@ export class ConformidadServicioComponent implements OnInit {
       this.listaSucursales = sucursales
     })
   }
-
+  getDocTotal(row: any): number {
+    //console.log("row", row)  
+    if (!row) return 0;
+    console.log("row", row) 
+    console.log("row.docCur", row.docCur) 
+    return row.docCur === 'SOL' ? row.docTotal : row.docTotalFC;
+  }
   async buscar(){
     this.listaPedidos = [];
     this.listaPaginas = [];

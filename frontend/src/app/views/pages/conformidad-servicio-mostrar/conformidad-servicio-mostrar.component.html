@@ -127,6 +127,7 @@
                       </ng-container>
                       <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
                           {{ row[item.key] | number: '1.2-2' }}
+                          {{ getDocTotal(row) | number:'1.2-2' }}
                       </ng-container>
                       <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
                           {{ row[item.key] | date: 'dd/MM/yyyy' }}
@@ -145,13 +146,13 @@
         <input cFormControl type="text" id="txtMoneda" [value]="pedido.docCur" disabled />
 
         <span cInputGroupText >Sub Total: </span>
-        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'" disabled />
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.docTotal - pedido.vatSum | number:'1.2-2') : (pedido.docTotalFC - pedido.vatSumFC | number:'1.2-2')" disabled />
       
         <span cInputGroupText> Impuesto: </span>
-        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.vatSum | number: '1.2-2'" disabled />
+        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.vatSum | number:'1.2-2') : (pedido.vatSumFC | number:'1.2-2')" disabled />
 
         <span cInputGroupText >Total: </span>
-        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal | number: '1.2-2'" disabled/>
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.docTotal | number:'1.2-2') : (pedido.docTotalFC | number:'1.2-2')" disabled/>
     </c-input-group>
 
     <br/>

@@ -55,9 +55,12 @@
                             <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass==''">
                                 {{ row[item.key] }}
                             </ng-container>
-                            <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
+                             <ng-container *ngIf="item.key === 'docTotal' && item.customClass === 'derecha'">
+                            {{ getDocTotal(row) | number:'1.2-2' }}
+                        </ng-container> 
+                           <!-- <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='derecha'">
                                 {{ row[item.key] | number: '1.2-2' }}
-                            </ng-container>
+                            </ng-container>-->
                             <ng-container *ngIf="item.subKey=='' && item.type=='' && item.customClass=='fecha'">
                                 {{ row[item.key] | date: 'dd/MM/yyyy' }}
                             </ng-container> 

@@ -181,7 +181,13 @@ export class OrdenCompraComponent implements OnInit {
   ngOnInit(): void {
     
   }
-
+ getDocTotal(row: any): number {
+    //console.log("row", row)  
+    if (!row) return 0;
+    console.log("row", row) 
+    console.log("row.docCur", row.docCur) 
+    return row.docCur === 'SOL' ? row.docTotal : row.docTotalFC;
+  }
   async buscar(){
     this.listaPaginas = [];
     this.listaPedidos = [];

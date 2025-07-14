@@ -30,7 +30,7 @@
         </div>
         <div class="col-lg-3">
           <label class="form-control-label" for="input-id-cont">Fecha Documento:</label>
-          <input class="form-control" type="date" id="txtFechaDoc" [value]="pedido.docDate" />
+          <input class="form-control" type="date" id="txtFechaDoc" [value]="pedido.docDate" disabled />
         </div>
         <div class="col-lg-3">
           <label class="form-control-label" for="input-id-cont">Fecha Vencimiento:</label>
@@ -170,13 +170,13 @@
         <input cFormControl type="text" id="txtMoneda" [value]="pedido.docCur" disabled   />
 
         <span cInputGroupText >Sub Total: </span>
-        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docTotal - pedido.vatSum | number: '1.2-2'" disabled />
+        <input cFormControl type="text" id="txtSubTotal" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.docTotal - pedido.vatSum | number:'1.2-2') : (pedido.docTotalFC - pedido.vatSumFC | number:'1.2-2')" disabled />
       
         <span cInputGroupText> Impuesto: </span>
-        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.vatSum | number: '1.2-2'" disabled />
+        <input cFormControl type="text" id="txtImpuesto" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.vatSum | number:'1.2-2') : (pedido.vatSumFC | number:'1.2-2')" disabled />
 
         <span cInputGroupText >Total: </span>
-        <input cFormControl type="text" id="txtTotal" class="derecha" [value]="pedido.docTotal | number: '1.2-2'" disabled />
+        <input cFormControl type="text" id="txtTotal" class="derecha" [value]="pedido.docCur === 'SOL' ? (pedido.docTotal | number:'1.2-2') : (pedido.docTotalFC | number:'1.2-2')" disabled />
     </c-input-group>
 
       <br/>
